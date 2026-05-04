@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>CriptChat v4 - Base64 Version</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-thumb { background: #31ad73; border-radius: 10px; }
+        .message-bubble { max-width: 85%; position: relative; }
+        .recording-pulse { animation: pulse 1.2s infinite; }
+        @keyframes pulse { 0% { opacity: 1; scale: 1; } 50% { opacity: 0.4; scale: 1.1; } 100% { opacity: 1; scale: 1; } }
+    </style>
+</head>
+<body class="bg-[#0b141a] text-gray-200 h-screen flex flex-col overflow-hidden">
+
+    <div id="toast-container" class="fixed top-5 left-1/2 -translate-x-1/2 z-[100] w-72"></div>
+
+    <!-- TELA DE AUTENTICAÇÃO -->
+    <div id="auth-screen" class="fixed inset-0 bg-[#0b141a] z-50 flex items-center justify-center p-6">
+        <div class="w-full max-w-md bg-[#1f2c33] p-8 rounded-2xl border border-gray-700 shadow-2xl">
+            <div class="text-center mb-8">
+                <div class="bg-emerald-600 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg shadow-emerald-900/20">
+                    <i class="fa-solid fa-lock text-3xl text-white"></i>
+                </div>
+                <h1 class="text-2xl font-bold text-white">CriptChat v4</h1>
+                <p class="text-gray-400 text-sm mt-1">Mensagens Seguras (Modo Base64)</p>
+            </div>
+
+            <div class="flex bg-[#111b21] p-1 rounded-xl mb-6">
+                <button id="btn-tab-login" class="flex-1 py-2 text-sm font-bold rounded-lg bg-[#2a3942] text-white">Entrar</button>
+                <button id="btn-tab-reg" class="flex-1 py-2 text-sm font-bold rounded-lg text-gray-400">Registar</button>
+            </div>
+
+            <form id="auth-form" class="space-y-4">
+                <div id="field-username" class="hidden">
+                    <input type="text" id="auth-username" class="w-full bg-[#2a3942] border-none rounded-lg p-4 text-white focus:ring-2 focus:ring-emerald-500 outline-none" placeholder="Nome de utilizador (único)">
+                </div>
+                <input type="email" id="auth-email" required class="w-full bg-[#2a3942] border-none rounded-lg p-4 text-white focus:ring-2 focus:ring-emerald-500 outline-none" placeholder="E-mail">
+                <input type="password" id="auth-password" required class="w-full bg-[#2a3942] border-none rounded-lg p-4 text-white focus:ring-2 focus:ring-emerald-500 outline-none" placeholder="Palavra-passe">
+                <button type="submit" id="btn-auth-submit" class="w-full bg-emerald-600 hover:bg-emerald-500 py-4 rounded-xl font-bold text-white transition-all shadow-lg active:scale-95">Aceder ao Chat</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- APP PRINCIPAL -->
+    <div id="app-screen" class="hidden flex h-full w-full">
+        <!-- Sidebar -->
+        <aside id="sidebar" class="w-full md:w-80 lg:w-96 bg-[#111b21] border-r border-gray-800 flex flex-col">
+            <header class="p-4 bg-[#202c33] flex justify-between items-center h-16 flex-shrink-0">
+                <div class="flex items-center gap-3">
+                    <div id="my-avatar" class="w-10 h-10 rounded-full bg-emerald-700 flex items-center justify-center font-bold">U</div>
+                    <span id="my-user-display" class="font-bold text-sm truncate w-32 text-white">@utilizador</span>
+                </div>
+                <button id="btn-logout" class="text-gray-400 hover:text-red-500 p-2"><i class="fa-solid fa-power-off"></i></button>
+            </header>
+
+            <div class="p-4 bg-[#111b21]">
+                <button onclick="openAddModal()" class="w-full bg-[#202c33] border border-gray-700 text-emerald-500 font-bold py-3 rounded-xl hover:bg-[#2a3942] transition-all flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-user-plus"></i> Novo Chat
+                </button>
+            </div>
+
+            <div id="chats-list" class="flex-1 overflow-y-auto">
+                <!-- Lista de contactos -->
+            </div>
+        </aside>
+
+        <!-- Área de Conversa -->
+        <main id="chat-area" class="flex-1 flex flex-col bg-[#0b141a] hidden md:flex">
+            <header class="h-16 bg-[#202c33] flex items-center px-4 border-l border-gray-800 flex-shrink-0">
+                <button id="btn-back" class="md:hidden text-gray-400 p-2 mr-2"><i class="fa-solid fa-arrow-left"></i></button>
+                <div id="chat-header-avatar" class="w-10 h-10 rounded-full bg-gray-600 flex items-center justify-center font-bold mr-3">?</div>
+                <div>
+                    <h2 id="chat-header-name" class="font-bold text-white">Selecionar Chat</h2>
+                    <p class="text-[10px] text-emerald-500 uppercase font-bold tracking-widest"><i class="fa-solid fa-shield-halved"></i> Criptografia AES</p>
+                </div>
+            </header>
+
+            <div id="messages-container" class="flex-1 overflow-y-auto p-4 space-y-4 bg-[url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png')] bg-fixed opacity-90">
+                <!-- Mensagens -->
+            </div>
+
+            <footer id="chat-footer" class="hidden p-3 bg-[#202c33] flex-shrink-0">
+                <div id="rec-indicator" class="hidden flex items-center gap-3 text-red-500 text-sm font-bold mb-2 ml-2">
+                    <i class="fa-solid fa-circle recording-pulse"></i> Gravando Voz... <span id="rec-timer">00:00</span>
+                </div>
+                <form id="msg-form" class="flex items-center gap-2">
+                    <div class="flex-1 bg-[#2a3942] rounded-full px-4 py-2 flex items-center border border-transparent focus-within:border-emerald-700 transition-all">
+                        <input id="msg-input" class="w-full bg-transparent outline-none text-white text-sm py-1" placeholder="Escrever mensagem..." autocomplete="off">
+                    </div>
+                    <button type="button" id="btn-record" class="w-11 h-11 rounded-full bg-[#2a3942] text-gray-300 flex items-center justify-center hover:text-white active:scale-90 transition-all">
+                        <i class="fa-solid fa-microphone"></i>
+                    </button>
+                    <button type="submit" id="btn-send" class="hidden w-11 h-11 rounded-full bg-emerald-600 text-white flex items-center justify-center active:scale-90 transition-all">
+                        <i class="fa-solid fa-paper-plane"></i>
+                    </button>
+                </form>
+            </footer>
+        </main>
+    </div>
+
+    <!-- MODAL ADD CONTACTO -->
+    <div id="modal-add" class="hidden fixed inset-0 z-[60] bg-black/80 flex items-center justify-center p-6">
+        <div class="w-full max-w-sm bg-[#1f2c33] p-6 rounded-2xl border border-gray-700">
+            <h3 class="text-xl font-bold text-white mb-4">Adicionar Contacto</h3>
+            <input type="text" id="add-user-input" class="w-full bg-[#2a3942] rounded-lg p-3 text-white outline-none mb-4" placeholder="@nome_de_utilizador">
+            <div class="flex gap-2">
+                <button onclick="closeAddModal()" class="flex-1 py-2 bg-gray-700 rounded-lg font-bold">Cancelar</button>
+                <button id="btn-confirm-add" class="flex-1 py-2 bg-emerald-600 rounded-lg font-bold">Adicionar</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc, getDoc, collection, query, where, onSnapshot, addDoc, serverTimestamp, orderBy } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // CONFIGURAÇÃO
+        const firebaseConfig = {
+            apiKey: "AIzaSyDxCnjFkGspP_jmZwmqTymwU3Lp23MMnrU",
+            authDomain: "curso-de-pr.firebaseapp.com",
+            projectId: "curso-de-pr",
+            storageBucket: "curso-de-pr.firebasestorage.app",
+            messagingSenderId: "891223846487",
+            appId: "1:891223846487:web:3ce1ce953c36172dd07d12"
+        };
+
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // ESTADO
+        let user = null;
+        let myUsername = "";
+        let isLogin = true;
+        let currentChatId = null;
+        let unsubChats = null;
+        let unsubMsgs = null;
+        
+        // RECORDER
+        let mediaRec;
+        let chunks = [];
+        let isRec = false;
+        let timer;
+
+        // AUXILIARES
+        const getPth = (col) => collection(db, 'artifacts', appId, 'public', 'data', col);
+        const getDocPth = (col, id) => doc(db, 'artifacts', appId, 'public', 'data', col, id);
+
+        function toast(msg, err = true) {
+            const container = document.getElementById('toast-container');
+            const div = document.createElement('div');
+            div.className = `${err ? 'bg-red-500' : 'bg-emerald-600'} text-white p-4 rounded-xl shadow-2xl mb-2 text-sm font-bold text-center`;
+            div.innerText = msg;
+            container.appendChild(div);
+            setTimeout(() => { div.style.opacity = '0'; setTimeout(() => div.remove(), 400); }, 3000);
+        }
+
+        const encrypt = (txt, key) => CryptoJS.AES.encrypt(txt, key).toString();
+        const decrypt = (cipher, key) => {
+            try { return CryptoJS.AES.decrypt(cipher, key).toString(CryptoJS.enc.Utf8) || "⚠️ Erro de leitura"; }
+            catch(e) { return "⚠️ Erro decript"; }
+        };
+
+        // AUTH UI
+        document.getElementById('btn-tab-login').onclick = () => { isLogin = true; updateAuthUI(); };
+        document.getElementById('btn-tab-reg').onclick = () => { isLogin = false; updateAuthUI(); };
+        function updateAuthUI() {
+            document.getElementById('btn-tab-login').className = isLogin ? "flex-1 py-2 text-sm font-bold rounded-lg bg-[#2a3942] text-white" : "flex-1 py-2 text-sm font-bold rounded-lg text-gray-400";
+            document.getElementById('btn-tab-reg').className = !isLogin ? "flex-1 py-2 text-sm font-bold rounded-lg bg-[#2a3942] text-white" : "flex-1 py-2 text-sm font-bold rounded-lg text-gray-400";
+            document.getElementById('field-username').classList.toggle('hidden', isLogin);
+            document.getElementById('btn-auth-submit').innerText = isLogin ? "Entrar" : "Criar Conta";
+        }
+
+        // AUTH LOGIC
+        document.getElementById('auth-form').onsubmit = async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('auth-email').value;
+            const pass = document.getElementById('auth-password').value;
+            const uname = document.getElementById('auth-username').value.trim().toLowerCase().replace(/\s/g, '');
+
+            try {
+                if(isLogin) {
+                    await signInWithEmailAndPassword(auth, email, pass);
+                } else {
+                    if(!uname) return toast("Escolha um nome!");
+                    const check = await getDoc(getDocPth('usernames', uname));
+                    if(check.exists()) return toast("Nome já em uso!");
+
+                    const res = await createUserWithEmailAndPassword(auth, email, pass);
+                    await setDoc(getDocPth('users', res.user.uid), { username: uname, uid: res.user.uid });
+                    await setDoc(getDocPth('usernames', uname), { uid: res.user.uid });
+                }
+            } catch(e) { toast(e.message); }
+        };
+
+        onAuthStateChanged(auth, async (u) => {
+            if(u) {
+                user = u;
+                const d = await getDoc(getDocPth('users', u.uid));
+                myUsername = d.exists() ? d.data().username : "user_" + u.uid.slice(0,4);
+                document.getElementById('my-user-display').innerText = "@" + myUsername;
+                document.getElementById('my-avatar').innerText = myUsername[0].toUpperCase();
+                document.getElementById('auth-screen').classList.add('hidden');
+                document.getElementById('app-screen').classList.remove('hidden');
+                loadChats();
+            } else {
+                document.getElementById('auth-screen').classList.remove('hidden');
+                document.getElementById('app-screen').classList.add('hidden');
+            }
+        });
+
+        document.getElementById('btn-logout').onclick = () => signOut(auth);
+
+        // MODAL CONTACTO
+        window.openAddModal = () => document.getElementById('modal-add').classList.remove('hidden');
+        window.closeAddModal = () => document.getElementById('modal-add').classList.add('hidden');
+
+        document.getElementById('btn-confirm-add').onclick = async () => {
+            const target = document.getElementById('add-user-input').value.trim().toLowerCase().replace('@', '');
+            if(!target || target === myUsername) return toast("Nome inválido!");
+
+            try {
+                const uSnap = await getDoc(getDocPth('usernames', target));
+                if(!uSnap.exists()) return toast("Não encontrado!");
+
+                const targetUid = uSnap.data().uid;
+                const cid = user.uid < targetUid ? `${user.uid}_${targetUid}` : `${targetUid}_${user.uid}`;
+                
+                await setDoc(getDocPth('chats', cid), {
+                    ids: [user.uid, targetUid],
+                    names: { [user.uid]: myUsername, [targetUid]: target },
+                    last: serverTimestamp()
+                }, { merge: true });
+
+                closeAddModal();
+                openChat(cid, target);
+            } catch(e) { toast(e.message); }
+        };
+
+        // CHATS
+        function loadChats() {
+            if(unsubChats) unsubChats();
+            const q = query(getPth('chats'), where('ids', 'array-contains', user.uid));
+            unsubChats = onSnapshot(q, (snap) => {
+                const list = document.getElementById('chats-list');
+                list.innerHTML = '';
+                const sorted = snap.docs.map(d => ({id: d.id, ...d.data()})).sort((a,b) => (b.last?.seconds || 0) - (a.last?.seconds || 0));
+                
+                sorted.forEach(c => {
+                    const otherUid = c.ids.find(i => i !== user.uid);
+                    const otherName = c.names[otherUid];
+                    const div = document.createElement('div');
+                    div.className = `p-4 flex items-center gap-3 cursor-pointer hover:bg-[#202c33] transition-all border-b border-gray-800/50 ${currentChatId === c.id ? 'bg-[#2a3942]' : ''}`;
+                    div.innerHTML = `<div class="w-12 h-12 rounded-full bg-gray-700 flex items-center justify-center font-bold text-white">${otherName[0].toUpperCase()}</div>
+                                   <div class="flex-1"><h4 class="font-bold text-gray-200">@${otherName}</h4><p class="text-[10px] text-emerald-500 font-bold">ENCRIPTADO</p></div>`;
+                    div.onclick = () => openChat(c.id, otherName);
+                    list.appendChild(div);
+                });
+            });
+        }
+
+        async function openChat(id, name) {
+            currentChatId = id;
+            document.getElementById('chat-header-name').innerText = "@" + name;
+            document.getElementById('chat-header-avatar').innerText = name[0].toUpperCase();
+            document.getElementById('chat-footer').classList.remove('hidden');
+            if(window.innerWidth < 768) document.getElementById('sidebar').classList.add('hidden');
+            document.getElementById('chat-area').classList.remove('hidden');
+            document.getElementById('chat-area').classList.add('flex');
+            loadMsgs();
+        }
+
+        // MENSAGENS
+        function loadMsgs() {
+            if(unsubMsgs) unsubMsgs();
+            const q = query(collection(db, 'artifacts', appId, 'public', 'data', 'chats', currentChatId, 'messages'), orderBy('timestamp', 'asc'));
+            unsubMsgs = onSnapshot(q, (snap) => {
+                const container = document.getElementById('messages-container');
+                container.innerHTML = '';
+                snap.forEach(d => {
+                    const data = d.data();
+                    const isMe = data.sender === user.uid;
+                    const content = decrypt(data.content, currentChatId);
+                    
+                    const div = document.createElement('div');
+                    div.className = `flex ${isMe ? 'justify-end' : 'justify-start'}`;
+                    
+                    let body = '';
+                    if(data.type === 'text') body = `<p class="text-sm leading-relaxed">${content}</p>`;
+                    else body = `<audio controls src="${content}" class="w-64 brightness-90 contrast-125 filter"></audio>`;
+
+                    div.innerHTML = `<div class="message-bubble px-3 py-2 rounded-xl shadow-md ${isMe ? 'bg-[#005c4b] text-white rounded-tr-none' : 'bg-[#202c33] text-gray-200 rounded-tl-none'}">
+                                        ${body}
+                                        <div class="text-[9px] text-right mt-1 opacity-50">${data.timestamp ? new Date(data.timestamp.seconds*1000).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}) : '...'}</div>
+                                    </div>`;
+                    container.appendChild(div);
+                });
+                container.scrollTop = container.scrollHeight;
+            });
+        }
+
+        document.getElementById('msg-form').onsubmit = async (e) => {
+            e.preventDefault();
+            const txt = document.getElementById('msg-input').value.trim();
+            if(!txt || !currentChatId) return;
+            document.getElementById('msg-input').value = '';
+            document.getElementById('btn-send').classList.add('hidden');
+            document.getElementById('btn-record').classList.remove('hidden');
+
+            const crypted = encrypt(txt, currentChatId);
+            const mRef = collection(db, 'artifacts', appId, 'public', 'data', 'chats', currentChatId, 'messages');
+            await addDoc(mRef, { type: 'text', content: crypted, sender: user.uid, timestamp: serverTimestamp() });
+            await setDoc(getDocPth('chats', currentChatId), { last: serverTimestamp() }, { merge: true });
+        };
+
+        // AUDIO BASE64
+        document.getElementById('btn-record').onclick = async () => {
+            if(isRec) {
+                mediaRec.stop();
+                isRec = false;
+                clearInterval(timer);
+                document.getElementById('rec-indicator').classList.add('hidden');
+                document.getElementById('btn-record').innerHTML = '<i class="fa-solid fa-microphone"></i>';
+                document.getElementById('btn-record').classList.remove('bg-red-600');
+                return;
+            }
+
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                mediaRec = new MediaRecorder(stream);
+                chunks = [];
+                mediaRec.ondataavailable = e => chunks.push(e.data);
+                mediaRec.onstop = async () => {
+                    const blob = new Blob(chunks, { type: 'audio/webm' });
+                    const reader = new FileReader();
+                    reader.readAsDataURL(blob);
+                    reader.onloadend = async () => {
+                        const base64 = reader.result;
+                        const encrypted = encrypt(base64, currentChatId);
+                        const mRef = collection(db, 'artifacts', appId, 'public', 'data', 'chats', currentChatId, 'messages');
+                        await addDoc(mRef, { type: 'audio', content: encrypted, sender: user.uid, timestamp: serverTimestamp() });
+                        await setDoc(getDocPth('chats', currentChatId), { last: serverTimestamp() }, { merge: true });
+                    };
+                };
+                mediaRec.start();
+                isRec = true;
+                document.getElementById('rec-indicator').classList.remove('hidden');
+                document.getElementById('btn-record').innerHTML = '<i class="fa-solid fa-stop"></i>';
+                document.getElementById('btn-record').classList.add('bg-red-600');
+                
+                let s = 0;
+                timer = setInterval(() => {
+                    s++;
+                    const m = Math.floor(s/60).toString().padStart(2,'0');
+                    const r = (s%60).toString().padStart(2,'0');
+                    document.getElementById('rec-timer').innerText = `${m}:${r}`;
+                }, 1000);
+            } catch(e) { toast("Erro no microfone!"); }
+        };
+
+        // INPUT CONTROL
+        document.getElementById('msg-input').oninput = (e) => {
+            const hasTxt = !!e.target.value.trim();
+            document.getElementById('btn-send').classList.toggle('hidden', !hasTxt);
+            document.getElementById('btn-record').classList.toggle('hidden', hasTxt);
+        };
+
+        document.getElementById('btn-back').onclick = () => {
+            document.getElementById('sidebar').classList.remove('hidden');
+            document.getElementById('chat-area').classList.add('hidden');
+        };
+    </script>
+</body>
+</html>
