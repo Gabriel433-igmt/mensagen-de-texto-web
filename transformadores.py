@@ -365,13 +365,85 @@ TRANSFORMADORES = {
 }
 
 
+def _carregar_personalizados() -> dict:
+    """
+    Carrega transformadores criados por VOCÊ, sem precisar programar.
+
+    Basta criar um arquivo 'minhas_ideias.json' na mesma pasta do app, com uma
+    lista de itens assim:
+
+        [
+          {
+            "nome": "Meu Gerador",
+            "emoji": "✨",
+            "modelo": "Minha ideia: {ideia}\\nFoco em {chave1} e {chave2}."
+          }
+        ]
+
+    Placeholders que você pode usar no "modelo":
+        {ideia}            -> o texto completo que a pessoa escreveu
+        {titulo}           -> um título curto da ideia
+        {chave1}..{chave6} -> as palavras mais importantes da ideia
+
+    Cada item vira um novo "app" dentro do programa. Assim qualquer pessoa pode
+    inventar suas próprias ideias e aumentar a criatividade!
+    """
+    import json
+    import os
+
+    caminho = os.path.join(
+        os.path.dirname(os.path.abspath(__file__)), "minhas_ideias.json"
+    )
+    if not os.path.exists(caminho):
+        return {}
+    try:
+        with open(caminho, "r", encoding="utf-8") as f:
+            itens = json.load(f)
+    except Exception:
+        return {}  # arquivo com erro: ignora, sem quebrar o app
+
+    personalizados: dict = {}
+    for item in itens:
+        nome = str(item.get("nome", "")).strip()
+        modelo = str(item.get("modelo", ""))
+        if not nome or not modelo:
+            continue
+        personalizados[nome] = {
+            "func": _criar_funcao_modelo(modelo),
+            "tipo": "html" if "<html" in modelo.lower() else "texto",
+            "emoji": item.get("emoji", "⭐"),
+        }
+    return personalizados
+
+
+def _criar_funcao_modelo(modelo: str):
+    """Cria uma função geradora a partir de um 'modelo' com placeholders."""
+    def gerar(ideia: str) -> str:
+        ch = palavras_chave(ideia, maximo=6)
+        while len(ch) < 6:
+            ch.append("ideia")
+        valores = {
+            "ideia": ideia.strip(),
+            "titulo": tema_curto(ideia),
+            "chave1": ch[0], "chave2": ch[1], "chave3": ch[2],
+            "chave4": ch[3], "chave5": ch[4], "chave6": ch[5],
+        }
+        texto = modelo
+        for chave, valor in valores.items():
+            texto = texto.replace("{" + chave + "}", str(valor))
+        return texto
+
+    return gerar
+
+
 def catalogo_completo() -> dict:
     """
-    Junta TODOS os transformadores disponíveis (núcleo + módulos extras).
+    Junta TODOS os transformadores disponíveis: núcleo + módulos extras +
+    criativos + os personalizados que o usuário criar em 'minhas_ideias.json'.
 
     Faz a importação dos extras de forma "preguiçosa" (só quando chamada) para
     evitar importação circular, já que os extras importam este módulo. Se algum
-    módulo extra não existir, o app continua funcionando só com o núcleo.
+    módulo não existir, o app continua funcionando com o que houver.
 
     Retorna um único dicionário {nome: {func, tipo, emoji}}.
     """
@@ -379,12 +451,18 @@ def catalogo_completo() -> dict:
     for modulo, atributo in (
         ("transformadores_extra", "TRANSFORMADORES_EXTRA"),
         ("transformadores_extra2", "TRANSFORMADORES_EXTRA2"),
+        ("transformadores_criativos", "TRANSFORMADORES_CRIATIVOS"),
     ):
         try:
             mod = __import__(modulo)
             catalogo.update(getattr(mod, atributo))
         except Exception:  # módulo extra ausente ou com erro: ignora
             pass
+    # Por último, os transformadores criados pelo próprio usuário.
+    try:
+        catalogo.update(_carregar_personalizados())
+    except Exception:
+        pass
     return catalogo
 
 

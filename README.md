@@ -4,8 +4,23 @@ Um app de PC onde você **escreve uma ideia**, **escolhe um app** e ele
 **transforma a ideia** naquilo que o app escolhido faz: uma redação, um jogo,
 uma história, uma música, um código, um plano e muito mais.
 
-São **30 transformadores** prontos — e ainda dá para mandar a ideia para um
-**programa externo do seu PC**.
+São **40 transformadores** prontos — incluindo vários para **aumentar a
+criatividade** — e você ainda pode **criar os seus próprios** sem programar,
+ou mandar a ideia para um **programa externo do seu PC**.
+
+---
+
+## ⬇️ Como baixar (SEM git)
+
+Você não precisa do git. Para baixar tudo de uma vez:
+
+1. Abra o repositório no GitHub.
+2. Clique no botão verde **`< > Code`** (no topo da lista de arquivos).
+3. Clique em **`Download ZIP`**.
+4. **Extraia** o arquivo `.zip` (botão direito → "Extrair tudo").
+5. Pronto! Dentro da pasta extraída está o app inteiro.
+
+Depois é só rodar o instalador (abaixo) ou abrir o `transformador_de_ideias.py`.
 
 ---
 
@@ -57,28 +72,57 @@ transformador-de-ideias-cli    # modo terminal
 
 ---
 
-## 🧩 Os 30 apps disponíveis
+## 🧩 Os 40 apps disponíveis
 
-| Texto | Texto | Interativo (HTML) |
-|-------|-------|-------------------|
-| 📝 Redação | 🏷️ Slogans | 🎮 Jogo da Forca |
-| 📖 História | 🔤 Nomes de Marca | 🧠 Quiz |
-| 🪶 Poema | 🧮 Análise FOFA (SWOT) | 🧩 Jogo da Memória |
-| ✅ Plano de Ação | 🎤 Pitch de Elevador | |
-| 📊 Apresentação | 💬 FAQ | |
-| 🧾 Resumo | 📚 Tutorial | |
-| ✉️ E-mail Formal | 👅 Trava-Língua | |
-| 📱 Post de Rede Social | 🎰 Banner em ASCII | |
-| 🍲 Receita | 🔐 Senha-Tema | |
-| 🎬 Roteiro de Vídeo | 😀 História em Emoji | |
-| 🎵 Letra de Música | ❓ Charada | |
-| ⚖️ Debate (prós e contras) | 📅 Cronograma | |
-| 📣 Anúncio | 💻 Código (Python) | |
-| 🗺️ Mapa Mental | | |
+**Escrita e organização:** 📝 Redação · 📖 História · 🪶 Poema ·
+✅ Plano de Ação · 📊 Apresentação · 🧾 Resumo · ✉️ E-mail Formal ·
+📱 Post de Rede Social · 🍲 Receita · 🎬 Roteiro de Vídeo · 🎵 Letra de Música ·
+⚖️ Debate · 📣 Anúncio · 🗺️ Mapa Mental · 💻 Código (Python) · ❓ Charada ·
+📅 Cronograma · 🏷️ Slogans · 🔤 Nomes de Marca · 🧮 Análise FOFA · 🎤 Pitch ·
+💬 FAQ · 📚 Tutorial · 👅 Trava-Língua · 🎰 Banner ASCII · 🔐 Senha-Tema ·
+😀 História em Emoji
+
+**🌟 Criatividade (novos!):** 🌈 Brainstorm · 🔄 SCAMPER · 🤔 E se...? ·
+🎭 Personagem · 🏰 Mundo Imaginário · 📆 Desafio de 30 Dias ·
+🃏 Combinador Maluco · 🛠️ Invenção · 🖼️ Logo (conceito) · 🎨 Paleta de Cores
+
+**🎮 Interativos (geram um arquivo HTML para abrir no navegador):**
+🎮 Jogo da Forca · 🧠 Quiz · 🧩 Jogo da Memória · 🎨 Paleta de Cores
 
 Mais a opção **📂 App do meu PC**: escolhe um programa instalado (ex.: um
 editor de texto) e o Transformador salva a ideia num arquivo e abre o programa
 com ela.
+
+---
+
+## ✨ Crie suas PRÓPRIAS ideias (sem programar!)
+
+Quer adicionar seus próprios geradores? É só criar um arquivo chamado
+**`minhas_ideias.json`** na pasta do app. Use o **`minhas_ideias.json.exemplo`**
+como modelo (basta copiar e renomear).
+
+Formato:
+
+```json
+[
+  {
+    "nome": "Meu Gerador de Sonhos",
+    "emoji": "🌟",
+    "modelo": "Um dia, a ideia \"{ideia}\" virou realidade!\nComeçou com {chave1} e {chave2}."
+  }
+]
+```
+
+Você pode usar estes "encaixes" dentro do `modelo`:
+
+| Encaixe | Vira... |
+|---------|---------|
+| `{ideia}` | o texto completo que a pessoa escreveu |
+| `{titulo}` | um título curto da ideia |
+| `{chave1}` ... `{chave6}` | as palavras mais importantes da ideia |
+
+Cada item do arquivo vira um **novo app** dentro do programa. Assim qualquer
+pessoa pode inventar quantas ideias quiser e soltar a criatividade! 🚀
 
 ---
 
@@ -89,8 +133,10 @@ com ela.
 | `transformadores.py` | Núcleo: utilidades + transformadores básicos |
 | `transformadores_extra.py` | Transformadores extras (quiz, memória, música...) |
 | `transformadores_extra2.py` | Mais transformadores (slogan, FOFA, FAQ...) |
+| `transformadores_criativos.py` | Transformadores de criatividade (brainstorm, SCAMPER...) |
 | `transformador_de_ideias.py` | Interface gráfica (janela) — com fallback p/ terminal |
 | `transformador_cli.py` | Modo terminal |
+| `minhas_ideias.json.exemplo` | Modelo para você criar seus próprios geradores |
 | `instalar.bat` / `instalar.sh` | Instaladores que preparam tudo |
 | `pyproject.toml` | Empacotamento para `pip install .` |
 
