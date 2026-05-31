@@ -1,0 +1,41 @@
+# Empacotamento opcional do Transformador de Ideias.
+#
+# O app NÃO precisa de bibliotecas externas (usa só a biblioteca padrão do
+# Python). Este arquivo é para quem quiser instalar o app como um comando do
+# sistema:
+#
+#     pip install .
+#
+# Depois disso, ficam disponíveis os comandos:
+#     transformador-de-ideias        (abre a janela; cai no terminal se faltar Tkinter)
+#     transformador-de-ideias-cli    (modo terminal direto)
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "transformador-de-ideias"
+version = "1.0.0"
+description = "Escreva uma ideia, escolha um app e ele a transforma em redação, jogo, música, código e muito mais."
+readme = "README.md"
+requires-python = ">=3.8"
+license = { text = "MIT" }
+authors = [{ name = "gabriel433-igmt" }]
+keywords = ["ideias", "gerador", "redacao", "jogo", "educacao", "desktop"]
+
+# Sem dependências externas — tudo usa a biblioteca padrão do Python.
+dependencies = []
+
+[project.scripts]
+transformador-de-ideias = "transformador_de_ideias:main"
+transformador-de-ideias-cli = "transformador_cli:executar"
+
+[tool.setuptools]
+py-modules = [
+    "transformadores",
+    "transformadores_extra",
+    "transformadores_extra2",
+    "transformador_de_ideias",
+    "transformador_cli",
+]

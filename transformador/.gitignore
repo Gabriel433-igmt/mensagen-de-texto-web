@@ -1,0 +1,13 @@
+# Arquivos gerados automaticamente pelo Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Empacotamento
+build/
+dist/
+*.egg-info/
+
+# Launchers/atalhos gerados pelos instaladores
+executar.sh
+"Transformador de Ideias.bat"
