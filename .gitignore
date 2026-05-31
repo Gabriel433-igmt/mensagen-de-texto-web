@@ -11,3 +11,6 @@ dist/
 # Launchers/atalhos gerados pelos instaladores
 executar.sh
 "Transformador de Ideias.bat"
+
+# Ideias personalizadas do usuario (cada um cria a sua a partir do .exemplo)
+minhas_ideias.json

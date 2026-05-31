@@ -36,6 +36,7 @@ py-modules = [
     "transformadores",
     "transformadores_extra",
     "transformadores_extra2",
+    "transformadores_criativos",
     "transformador_de_ideias",
     "transformador_cli",
 ]

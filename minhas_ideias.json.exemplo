@@ -1,0 +1,12 @@
+[
+  {
+    "nome": "Meu Gerador de Sonhos",
+    "emoji": "🌟",
+    "modelo": "MEU GERADOR DE SONHOS\n{titulo}\n=====================\n\nUm dia, a ideia \"{ideia}\" virou realidade.\nTudo começou com {chave1} e um pouco de {chave2}.\nNo fim, {chave3} mudou tudo para melhor!\n\nNunca pare de sonhar. ✨"
+  },
+  {
+    "nome": "Carta para o Futuro",
+    "emoji": "✉️",
+    "modelo": "CARTA PARA O FUTURO\n===================\n\nQuerido eu do futuro,\n\nHoje tive a ideia: {ideia}.\nEspero que você tenha transformado {chave1} em algo incrível,\ne que {chave2} tenha dado certo.\n\nNão desista de {titulo}!\n\nAbraços,\nVocê do passado."
+  }
+]
