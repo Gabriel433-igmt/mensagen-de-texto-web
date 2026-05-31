@@ -1,0 +1,6 @@
+# O Transformador de Ideias NÃO precisa de bibliotecas externas.
+# Ele usa apenas a biblioteca padrão do Python 3 (tkinter, json, etc.).
+#
+# Por isso, este arquivo está intencionalmente vazio (sem dependências).
+# Basta ter o Python 3 instalado. No Linux, se faltar a janela gráfica,
+# instale o Tkinter com:  sudo apt install python3-tk
