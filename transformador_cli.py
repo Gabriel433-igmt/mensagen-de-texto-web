@@ -78,10 +78,22 @@ def executar() -> None:
         _limpar_tela()
         _cabecalho()
 
-        ideia = input("\n  ✍  Escreva sua ideia (ou 'sair'): ").strip()
+        ideia = input("\n  ✍  Escreva sua ideia ('chave' p/ IA, 'sair' p/ fechar): ").strip()
         if ideia.lower() in ("sair", "exit", "quit", "q"):
             print("\n  Até a próxima! 👋\n")
             return
+        if ideia.lower() == "chave":
+            try:
+                import ia
+                nova = input("\n  🔑 Cole sua chave da OpenAI (sk-...): ").strip()
+                if nova:
+                    caminho = ia.salvar_chave(nova)
+                    print(f"  ✅ Chave salva em: {caminho} (protegida, não vai pro GitHub)")
+                input("  (Enter para continuar)")
+            except Exception as e:
+                print(f"  ⚠ {e}")
+                input("  (Enter para continuar)")
+            continue
         if not ideia:
             print("\n  ⚠ Você precisa escrever uma ideia. Tente de novo.")
             input("  (Enter para continuar)")
@@ -95,12 +107,29 @@ def executar() -> None:
             continue
 
         nome_app = nomes[int(escolha) - 1]
+
+        # Pergunta sobre usar IA, se houver uma chave configurada.
+        usar_ia = False
         try:
-            resultado = core.transformar(nome_app, ideia)
+            import ia
+            if ia.ia_disponivel():
+                resp = input("\n  🤖 Usar IA de verdade (GPT)? (s/n): ").strip().lower()
+                usar_ia = resp.startswith("s")
+        except Exception:
+            pass
+
+        if usar_ia:
+            print("\n  🤖 Pensando com a IA... (aguarde)")
+
+        try:
+            resultado = core.transformar(nome_app, ideia, usar_ia=usar_ia)
         except ValueError as erro:
             print(f"\n  ⚠ {erro}")
             input("  (Enter para continuar)")
             continue
+
+        if resultado.get("aviso"):
+            print(f"\n  ⚠ {resultado['aviso']}")
 
         print("\n" + LINHA)
         if resultado["tipo"] == "html":

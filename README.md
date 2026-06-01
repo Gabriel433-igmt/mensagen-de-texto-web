@@ -95,6 +95,29 @@ com ela.
 
 ---
 
+## 🤖 Modo IA de verdade (GPT)
+
+Por padrão, os transformadores usam **modelos offline** (rápidos, de graça,
+sem internet). Mas você pode ligar o **modo IA**, em que sua ideia é enviada
+para o **GPT da OpenAI**, que escreve um texto **original** (diferente a cada
+vez), de verdade.
+
+**Como ativar:**
+1. Crie uma chave em https://platform.openai.com/api-keys (começa com `sk-`).
+2. No app, marque **🤖 Usar IA de verdade** e clique em **🔑 Configurar chave**.
+   (No terminal, digite `chave`.)
+3. Cole a chave. Pronto — agora o app pensa de verdade. 🎉
+
+> 🔒 **Segurança:** a chave fica **só no seu PC**, no arquivo
+> `chave_openai.txt`, que está no `.gitignore` e **nunca** vai para o GitHub.
+> Nunca compartilhe sua chave com ninguém nem a cole em sites/chats.
+>
+> 💡 A IA da OpenAI é **paga por uso** (geralmente centavos por texto) e
+> precisa de **internet**. Se faltar internet ou a chave falhar, o app volta
+> sozinho para o modo offline e avisa.
+
+---
+
 ## ✨ Crie suas PRÓPRIAS ideias (sem programar!)
 
 Quer adicionar seus próprios geradores? É só criar um arquivo chamado
@@ -136,6 +159,7 @@ pessoa pode inventar quantas ideias quiser e soltar a criatividade! 🚀
 | `transformadores_criativos.py` | Transformadores de criatividade (brainstorm, SCAMPER...) |
 | `transformador_de_ideias.py` | Interface gráfica (janela) — com fallback p/ terminal |
 | `transformador_cli.py` | Modo terminal |
+| `ia.py` | Motor de IA de verdade (GPT/OpenAI) com fallback offline |
 | `minhas_ideias.json.exemplo` | Modelo para você criar seus próprios geradores |
 | `instalar.bat` / `instalar.sh` | Instaladores que preparam tudo |
 | `pyproject.toml` | Empacotamento para `pip install .` |
