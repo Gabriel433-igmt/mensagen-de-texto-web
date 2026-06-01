@@ -14,3 +14,9 @@ executar.sh
 
 # Ideias personalizadas do usuario (cada um cria a sua a partir do .exemplo)
 minhas_ideias.json
+
+# CHAVE DE API — NUNCA deve ir para o GitHub! (e nenhuma variante)
+chave_openai.txt
+chave*.txt
+*.key
+.env

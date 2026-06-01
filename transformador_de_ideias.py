@@ -140,6 +140,29 @@ if TEM_GUI:
                 cursor="hand2", command=self.transformar,
             ).pack(side="left", padx=(10, 0))
 
+            # ---- Barra do modo IA ----
+            barra_ia = tk.Frame(self, bg=self.BG)
+            barra_ia.pack(fill="x", padx=20, pady=(2, 0))
+            self.var_ia = tk.BooleanVar(value=False)
+            self.check_ia = tk.Checkbutton(
+                barra_ia, text="🤖 Usar IA de verdade (GPT)", variable=self.var_ia,
+                onvalue=True, offvalue=False, font=("Segoe UI", 10, "bold"),
+                fg=self.DESTAQUE, bg=self.BG, selectcolor=self.PAINEL,
+                activebackground=self.BG, activeforeground=self.DESTAQUE,
+                command=self._ao_alternar_ia,
+            )
+            self.check_ia.pack(side="left")
+            tk.Button(
+                barra_ia, text="🔑 Configurar chave", font=("Segoe UI", 9),
+                bg="#334155", fg=self.TEXTO, relief="flat", cursor="hand2",
+                command=self.configurar_chave,
+            ).pack(side="left", padx=(10, 0))
+            self.lbl_ia = tk.Label(
+                barra_ia, text="", font=("Segoe UI", 9), fg="#94a3b8", bg=self.BG,
+            )
+            self.lbl_ia.pack(side="left", padx=(10, 0))
+            self._atualizar_status_ia()
+
             # ---- Resultado ----
             bloco_res = tk.Frame(self, bg=self.BG)
             bloco_res.pack(fill="both", expand=True, padx=20, pady=(10, 6))
@@ -229,6 +252,75 @@ if TEM_GUI:
             self.txt_ideia.insert("1.0", random.choice(exemplos))
             self._set_status("Ideia aleatória inserida.")
 
+        # ----------------------------------------------------------- IA
+        def _ao_alternar_ia(self) -> None:
+            if self.var_ia.get():
+                import ia
+                if not ia.ia_disponivel():
+                    self.var_ia.set(False)
+                    if messagebox.askyesno(
+                        "Configurar IA",
+                        "Para usar a IA de verdade você precisa colar sua chave "
+                        "da OpenAI.\n\nQuer configurar a chave agora?",
+                    ):
+                        self.configurar_chave()
+            self._atualizar_status_ia()
+
+        def _atualizar_status_ia(self) -> None:
+            import ia
+            if ia.ia_disponivel():
+                self.lbl_ia.config(text="✓ chave configurada", fg="#4ade80")
+            else:
+                self.lbl_ia.config(text="(sem chave — usando modelos offline)",
+                                   fg="#94a3b8")
+
+        def configurar_chave(self) -> None:
+            import ia
+            dlg = tk.Toplevel(self)
+            dlg.title("Configurar chave da IA")
+            dlg.configure(bg=self.BG)
+            dlg.geometry("520x230")
+            dlg.transient(self)
+            tk.Label(
+                dlg, text="Cole sua chave da OpenAI (começa com 'sk-'):",
+                font=("Segoe UI", 11, "bold"), fg=self.TEXTO, bg=self.BG,
+            ).pack(anchor="w", padx=16, pady=(16, 4))
+            entrada = tk.Entry(dlg, font=("Consolas", 10), show="•",
+                               bg=self.PAINEL, fg=self.TEXTO,
+                               insertbackground=self.TEXTO, relief="flat")
+            entrada.pack(fill="x", padx=16, ipady=6)
+            chave_atual = ia.carregar_chave()
+            if chave_atual:
+                entrada.insert(0, chave_atual)
+            tk.Label(
+                dlg, text="🔒 A chave fica só no seu PC (arquivo chave_openai.txt)\n"
+                          "e nunca é enviada para o GitHub.",
+                font=("Segoe UI", 9), fg="#94a3b8", bg=self.BG, justify="left",
+            ).pack(anchor="w", padx=16, pady=(10, 0))
+
+            def salvar():
+                valor = entrada.get().strip()
+                if not valor:
+                    messagebox.showwarning("Atenção", "Cole uma chave válida.")
+                    return
+                caminho = ia.salvar_chave(valor)
+                self.var_ia.set(True)
+                self._atualizar_status_ia()
+                messagebox.showinfo("Pronto!",
+                                    f"Chave salva com segurança em:\n{caminho}")
+                dlg.destroy()
+
+            barra = tk.Frame(dlg, bg=self.BG)
+            barra.pack(fill="x", padx=16, pady=16)
+            tk.Button(barra, text="💾 Salvar chave", font=("Segoe UI", 10, "bold"),
+                      bg=self.DESTAQUE, fg="#0f172a", relief="flat", padx=14,
+                      pady=6, cursor="hand2", command=salvar).pack(side="left")
+            tk.Button(barra, text="Cancelar", font=("Segoe UI", 10),
+                      bg="#334155", fg=self.TEXTO, relief="flat", padx=14,
+                      pady=6, cursor="hand2", command=dlg.destroy).pack(side="left",
+                                                                        padx=8)
+
+        # ------------------------------------------------------- transformar
         def transformar(self) -> None:
             ideia = self.txt_ideia.get("1.0", "end").strip()
             nome = self._nome_app_selecionado()
@@ -237,27 +329,37 @@ if TEM_GUI:
                 self._usar_app_externo(ideia)
                 return
 
+            usar_ia = bool(self.var_ia.get())
+            if usar_ia:
+                self._set_status("🤖 Pensando com a IA... (pode levar alguns segundos)")
+                self.update_idletasks()
+
             try:
-                resultado = core.transformar(nome, ideia)
+                resultado = core.transformar(nome, ideia, usar_ia=usar_ia)
             except ValueError as erro:
                 messagebox.showwarning("Atenção", str(erro))
+                self._set_status("Pronto.")
                 return
 
             self.ultimo_resultado = resultado
+            if resultado.get("aviso"):
+                messagebox.showinfo("Aviso", resultado["aviso"])
+            origem = "🤖 IA" if resultado.get("via") == "ia" else "📋 modelo offline"
+
             self.txt_saida.delete("1.0", "end")
             if resultado["tipo"] == "html":
                 self.txt_saida.insert(
                     "1.0",
-                    "🎮 Conteúdo interativo (HTML) gerado com sucesso!\n\n"
+                    f"🎮 Conteúdo interativo (HTML) gerado via {origem}!\n\n"
                     "• Clique em '🌐 Abrir jogo' para abrir no navegador.\n"
                     "• Ou em '💾 Salvar' para guardar o arquivo .html.\n\n"
                     "----- prévia do código -----\n\n"
                     + resultado["conteudo"][:1200] + "\n...",
                 )
-                self._set_status(f"'{nome}' gerou um HTML jogável.")
+                self._set_status(f"'{nome}' gerou um HTML ({origem}).")
             else:
                 self.txt_saida.insert("1.0", resultado["conteudo"])
-                self._set_status(f"'{nome}' aplicado com sucesso.")
+                self._set_status(f"'{nome}' aplicado ({origem}).")
 
         def _usar_app_externo(self, ideia: str) -> None:
             if not ideia:

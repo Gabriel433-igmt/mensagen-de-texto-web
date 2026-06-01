@@ -466,11 +466,16 @@ def catalogo_completo() -> dict:
     return catalogo
 
 
-def transformar(nome_app: str, ideia: str) -> dict:
+def transformar(nome_app: str, ideia: str, usar_ia: bool = False) -> dict:
     """
     Aplica o transformador escolhido à ideia.
 
-    Retorna um dicionário: {"conteudo": str, "tipo": "texto"|"html"}.
+    Se 'usar_ia' for True e houver uma chave de IA configurada, o conteúdo é
+    gerado por IA de verdade (texto original). Caso contrário, usa os modelos
+    offline. Se a IA falhar, cai automaticamente no modelo offline e avisa.
+
+    Retorna {"conteudo": str, "tipo": "texto"|"html", "via": "ia"|"modelo",
+             "aviso": str|None}.
     Lança ValueError se a ideia estiver vazia ou o app não existir.
     """
     if not ideia or not ideia.strip():
@@ -479,7 +484,21 @@ def transformar(nome_app: str, ideia: str) -> dict:
     if nome_app not in catalogo:
         raise ValueError(f"App desconhecido: {nome_app}")
     info = catalogo[nome_app]
-    return {"conteudo": info["func"](ideia), "tipo": info["tipo"]}
+    tipo = info["tipo"]
+
+    if usar_ia:
+        try:
+            import ia
+            conteudo = ia.gerar_para_app(nome_app, ideia, tipo)
+            return {"conteudo": conteudo, "tipo": tipo, "via": "ia", "aviso": None}
+        except Exception as erro:
+            # Falhou a IA: usa o modelo offline e devolve o motivo como aviso.
+            conteudo = info["func"](ideia)
+            return {"conteudo": conteudo, "tipo": tipo, "via": "modelo",
+                    "aviso": f"IA indisponível ({erro}). Usei o modo offline."}
+
+    return {"conteudo": info["func"](ideia), "tipo": tipo,
+            "via": "modelo", "aviso": None}
 
 
 # ----------------------------------------------------------------------------
