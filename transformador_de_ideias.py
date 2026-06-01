@@ -258,21 +258,28 @@ if TEM_GUI:
                 import ia
                 if not ia.ia_disponivel():
                     self.var_ia.set(False)
-                    if messagebox.askyesno(
-                        "Configurar IA",
-                        "Para usar a IA de verdade você precisa colar sua chave "
-                        "da OpenAI.\n\nQuer configurar a chave agora?",
-                    ):
-                        self.configurar_chave()
+                    messagebox.showinfo(
+                        "Ativar a IA de verdade",
+                        "Nenhuma IA encontrada ainda.\n\n"
+                        "Recomendado (grátis, sem chave): instale a IA local "
+                        "'Ollama' usando o instalador (instalar.bat / instalar.sh). "
+                        "Depois é só abrir o app e marcar esta caixa.\n\n"
+                        "Alternativa: clique em '🔑 Configurar chave' se você "
+                        "tiver uma chave da OpenAI.",
+                    )
             self._atualizar_status_ia()
 
         def _atualizar_status_ia(self) -> None:
             import ia
-            if ia.ia_disponivel():
-                self.lbl_ia.config(text="✓ chave configurada", fg="#4ade80")
+            motor = ia.motor_disponivel()
+            if motor == "ollama":
+                self.lbl_ia.config(text="✓ IA local (Ollama) — grátis", fg="#4ade80")
+            elif motor == "openai":
+                self.lbl_ia.config(text="✓ IA na nuvem (chave OpenAI)", fg="#4ade80")
             else:
-                self.lbl_ia.config(text="(sem chave — usando modelos offline)",
-                                   fg="#94a3b8")
+                self.lbl_ia.config(
+                    text="(sem IA — instale o Ollama grátis ou use modelos offline)",
+                    fg="#94a3b8")
 
         def configurar_chave(self) -> None:
             import ia
