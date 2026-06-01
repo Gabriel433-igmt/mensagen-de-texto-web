@@ -95,26 +95,39 @@ com ela.
 
 ---
 
-## 🤖 Modo IA de verdade (GPT)
+## 🤖 Modo IA de verdade
 
-Por padrão, os transformadores usam **modelos offline** (rápidos, de graça,
-sem internet). Mas você pode ligar o **modo IA**, em que sua ideia é enviada
-para o **GPT da OpenAI**, que escreve um texto **original** (diferente a cada
-vez), de verdade.
+Com o **modo IA** ligado, sua ideia é enviada para uma IA que escreve um texto
+**original** (diferente a cada vez) — de verdade, não texto pronto.
 
-**Como ativar:**
+Existem 2 formas (o app escolhe sozinho a melhor que estiver disponível):
+
+### ⭐ 1. IA local — GRÁTIS e SEM CHAVE (recomendado para todos)
+Usa o **Ollama**, uma IA que roda **no próprio PC**. Não precisa de chave, nem
+conta, nem pagar nada, e funciona **offline**.
+
+- O **instalador** (`instalar.bat` / `instalar.sh`) instala e configura tudo
+  sozinho — só responder "sim" quando ele perguntar.
+- Depois, abra o app e marque **🤖 Usar IA de verdade**. Pronto! 🎉
+- Custo: um **download único** do modelo (alguns GB) e um PC razoável.
+
+Instalação manual (opcional): baixe em https://ollama.com/download e rode
+`ollama pull llama3.2`.
+
+### 2. IA na nuvem — OpenAI (opcional, paga)
+Para quem já tem uma **chave da OpenAI**. Tem ótima qualidade, mas é **paga por
+uso** e precisa de **internet**.
+
 1. Crie uma chave em https://platform.openai.com/api-keys (começa com `sk-`).
-2. No app, marque **🤖 Usar IA de verdade** e clique em **🔑 Configurar chave**.
-   (No terminal, digite `chave`.)
-3. Cole a chave. Pronto — agora o app pensa de verdade. 🎉
+2. No app, clique em **🔑 Configurar chave** e cole. (No terminal, digite `chave`.)
 
-> 🔒 **Segurança:** a chave fica **só no seu PC**, no arquivo
-> `chave_openai.txt`, que está no `.gitignore` e **nunca** vai para o GitHub.
-> Nunca compartilhe sua chave com ninguém nem a cole em sites/chats.
->
-> 💡 A IA da OpenAI é **paga por uso** (geralmente centavos por texto) e
-> precisa de **internet**. Se faltar internet ou a chave falhar, o app volta
-> sozinho para o modo offline e avisa.
+> 🔒 **Segurança:** a chave fica **só no seu PC** (`chave_openai.txt`, no
+> `.gitignore`) e **nunca** vai para o GitHub. **Nunca** compartilhe sua chave
+> nem a deixe pública — qualquer pessoa poderia gastar o seu dinheiro, e a
+> OpenAI desativa chaves vazadas automaticamente.
+
+> Se nenhuma IA estiver disponível, o app usa os **modelos offline** como
+> reserva e avisa — ele nunca trava.
 
 ---
 
