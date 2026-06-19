@@ -1,194 +1,91 @@
-# 💡 Transformador de Ideias
+# 🔪 Fuga 3D
 
-Um app de PC onde você **escreve uma ideia**, **escolhe um app** e ele
-**transforma a ideia** naquilo que o app escolhido faz: uma redação, um jogo,
-uma história, uma música, um código, um plano e muito mais.
+Jogo **3D online (multiplayer)** no navegador, no estilo *Forsaken*: cada
+rodada tem uma fase de **desenho**, uma **votação do desenho mais feio** e
+uma **fuga de 3 minutos** onde os sobreviventes correm de um **assassino**.
 
-São **40 transformadores** prontos — incluindo vários para **aumentar a
-criatividade** — e você ainda pode **criar os seus próprios** sem programar,
-ou mandar a ideia para um **programa externo do seu PC**.
-
----
-
-## ⬇️ Como baixar (SEM git)
-
-Você não precisa do git. Para baixar tudo de uma vez:
-
-1. Abra o repositório no GitHub.
-2. Clique no botão verde **`< > Code`** (no topo da lista de arquivos).
-3. Clique em **`Download ZIP`**.
-4. **Extraia** o arquivo `.zip` (botão direito → "Extrair tudo").
-5. Pronto! Dentro da pasta extraída está o app inteiro.
-
-Depois é só rodar o instalador (abaixo) ou abrir o `transformador_de_ideias.py`.
+> ⚠️ **Estado:** é uma **base jogável e funcional** (protótipo), não um jogo
+> AAA finalizado. Tem o ciclo completo de partida, economia e poderes
+> funcionando. Dá pra evoluir gráficos, mapas, anti-cheat e poderes a partir
+> daqui.
 
 ---
 
-## 🚀 Instalação fácil (instala tudo que precisa)
+## ▶️ Como rodar
 
-O instalador verifica/instala o **Python** (que já vem com a interface gráfica
-**Tkinter**) e cria um **atalho** para abrir o app.
-
-### Windows
-1. Baixe esta pasta.
-2. Clique duas vezes em **`instalar.bat`**.
-3. Siga as instruções na tela. Pronto! Use o atalho na Área de Trabalho.
-
-### Linux / macOS
-```bash
-chmod +x instalar.sh
-./instalar.sh
-```
-
-> Não tem nenhuma biblioteca externa para baixar — o app usa só o que já vem
-> com o Python. O instalador cuida do resto.
-
----
-
-## ▶️ Como rodar (sem instalador)
-
-Tendo o Python 3 instalado:
+Precisa do **Node.js 18+**.
 
 ```bash
-python3 transformador_de_ideias.py
+npm install
+npm start
 ```
 
-- Se o computador tiver interface gráfica (Tkinter), abre a **janela**.
-- Se **não** tiver, o app cai automaticamente no **modo terminal** — então
-  ele **sempre funciona**.
+Abra **http://localhost:3000** no navegador. Para jogar de verdade (mín. 3
+jogadores), abra **3 ou mais abas/aparelhos** apontando para o mesmo endereço.
 
-Para forçar o modo terminal:
-
-```bash
-python3 transformador_cli.py
-```
-
-### Instalar como comando do sistema (opcional)
-```bash
-pip install .
-transformador-de-ideias        # abre a janela
-transformador-de-ideias-cli    # modo terminal
-```
+Para outras pessoas entrarem pela internet, hospede o `server.js` (Render,
+Railway, uma VPS, etc.) e compartilhe o link.
 
 ---
 
-## 🧩 Os 40 apps disponíveis
+## 🎮 Como joga
 
-**Escrita e organização:** 📝 Redação · 📖 História · 🪶 Poema ·
-✅ Plano de Ação · 📊 Apresentação · 🧾 Resumo · ✉️ E-mail Formal ·
-📱 Post de Rede Social · 🍲 Receita · 🎬 Roteiro de Vídeo · 🎵 Letra de Música ·
-⚖️ Debate · 📣 Anúncio · 🗺️ Mapa Mental · 💻 Código (Python) · ❓ Charada ·
-📅 Cronograma · 🏷️ Slogans · 🔤 Nomes de Marca · 🧮 Análise FOFA · 🎤 Pitch ·
-💬 FAQ · 📚 Tutorial · 👅 Trava-Língua · 🎰 Banner ASCII · 🔐 Senha-Tema ·
-😀 História em Emoji
+1. **Entre** com um nome. Você começa com **R$100** (máx. **R$1000**).
+2. No **lobby**, compre um personagem na loja e clique em **Ficar pronto**.
+   Quando houver **3+ prontos**, a partida começa.
+3. **Desenho:** desenhe algo (45s).
+4. **Votação:** vote no **desenho mais feio**. O mais votado vira o **alvo
+   destacado** (brilha) e precisa fugir.
+5. **Fuga (3 min):** um **assassino** (sorteado) caça todos. Sobreviventes
+   usam seus poderes pra escapar.
+   - Mover: **WASD / setas** · Olhar: **mouse** (clique pra travar o mouse)
+   - Sobrevivente: **Espaço** usa o poder · Assassino: **Espaço / clique** ataca
+6. **Vitória:** se o assassino pega todos → assassino vence. Se sobrar alguém
+   no tempo → sobreviventes vencem.
 
-**🌟 Criatividade (novos!):** 🌈 Brainstorm · 🔄 SCAMPER · 🤔 E se...? ·
-🎭 Personagem · 🏰 Mundo Imaginário · 📆 Desafio de 30 Dias ·
-🃏 Combinador Maluco · 🛠️ Invenção · 🖼️ Logo (conceito) · 🎨 Paleta de Cores
+### 💰 Economia
 
-**🎮 Interativos (geram um arquivo HTML para abrir no navegador):**
-🎮 Jogo da Forca · 🧠 Quiz · 🧩 Jogo da Memória · 🎨 Paleta de Cores
+| Ação | Recompensa |
+|------|-----------|
+| Participar | **+R$15** |
+| Sobreviver e vencer | **+R$20** |
+| Vencer como assassino | **+R$40** |
+| Cada morte feita pelo assassino | **+R$1** |
 
-Mais a opção **📂 App do meu PC**: escolhe um programa instalado (ex.: um
-editor de texto) e o Transformador salva a ideia num arquivo e abre o programa
-com ela.
+O dinheiro é **salvo por nome** (arquivo `data/wallets.json`).
 
----
+### 🦸 Personagens / poderes (loja)
 
-## 🤖 Modo IA de verdade
+| Personagem | Preço | Poder |
+|-----------|------|-------|
+| Clássico | Grátis | Sem poder |
+| Lua | R$100 | Corre mais rápido, mas congela 1s a cada 10s |
+| The Artist | R$250 | Marca um ponto e volta pra ele (5x) |
+| The Bester | R$450 | Fica invisível por 5s (3x) |
+| The Adm | R$650 | Atordoa o assassino que estiver perto (3x) |
+| The Pro | R$850 | Congela ("controla") o assassino por 10s (1x) |
+| The Power Best | R$1000 | Escolhe um dos 3 poderes acima |
 
-Com o **modo IA** ligado, sua ideia é enviada para uma IA que escreve um texto
-**original** (diferente a cada vez) — de verdade, não texto pronto.
-
-Existem 2 formas (o app escolhe sozinho a melhor que estiver disponível):
-
-### ⭐ 1. IA local — GRÁTIS e SEM CHAVE (recomendado para todos)
-Usa o **Ollama**, uma IA que roda **no próprio PC**. Não precisa de chave, nem
-conta, nem pagar nada, e funciona **offline**.
-
-- O **instalador** (`instalar.bat` / `instalar.sh`) instala e configura tudo
-  sozinho — só responder "sim" quando ele perguntar.
-- Depois, abra o app e marque **🤖 Usar IA de verdade**. Pronto! 🎉
-- Custo: um **download único** do modelo (alguns GB) e um PC razoável.
-
-Instalação manual (opcional): baixe em https://ollama.com/download e rode
-`ollama pull llama3.2`.
-
-### 2. IA na nuvem — OpenAI (opcional, paga)
-Para quem já tem uma **chave da OpenAI**. Tem ótima qualidade, mas é **paga por
-uso** e precisa de **internet**.
-
-1. Crie uma chave em https://platform.openai.com/api-keys (começa com `sk-`).
-2. No app, clique em **🔑 Configurar chave** e cole. (No terminal, digite `chave`.)
-
-> 🔒 **Segurança:** a chave fica **só no seu PC** (`chave_openai.txt`, no
-> `.gitignore`) e **nunca** vai para o GitHub. **Nunca** compartilhe sua chave
-> nem a deixe pública — qualquer pessoa poderia gastar o seu dinheiro, e a
-> OpenAI desativa chaves vazadas automaticamente.
-
-> Se nenhuma IA estiver disponível, o app usa os **modelos offline** como
-> reserva e avisa — ele nunca trava.
+O **assassino é sorteado** com peso pelo dinheiro acumulado: quem ganhou mais
+tem mais chance de ser o assassino.
 
 ---
 
-## ✨ Crie suas PRÓPRIAS ideias (sem programar!)
-
-Quer adicionar seus próprios geradores? É só criar um arquivo chamado
-**`minhas_ideias.json`** na pasta do app. Use o **`minhas_ideias.json.exemplo`**
-como modelo (basta copiar e renomear).
-
-Formato:
-
-```json
-[
-  {
-    "nome": "Meu Gerador de Sonhos",
-    "emoji": "🌟",
-    "modelo": "Um dia, a ideia \"{ideia}\" virou realidade!\nComeçou com {chave1} e {chave2}."
-  }
-]
-```
-
-Você pode usar estes "encaixes" dentro do `modelo`:
-
-| Encaixe | Vira... |
-|---------|---------|
-| `{ideia}` | o texto completo que a pessoa escreveu |
-| `{titulo}` | um título curto da ideia |
-| `{chave1}` ... `{chave6}` | as palavras mais importantes da ideia |
-
-Cada item do arquivo vira um **novo app** dentro do programa. Assim qualquer
-pessoa pode inventar quantas ideias quiser e soltar a criatividade! 🚀
-
----
-
-## 🛠️ Como funciona por dentro
+## 🛠️ Arquitetura
 
 | Arquivo | O que faz |
 |---------|-----------|
-| `transformadores.py` | Núcleo: utilidades + transformadores básicos |
-| `transformadores_extra.py` | Transformadores extras (quiz, memória, música...) |
-| `transformadores_extra2.py` | Mais transformadores (slogan, FOFA, FAQ...) |
-| `transformadores_criativos.py` | Transformadores de criatividade (brainstorm, SCAMPER...) |
-| `transformador_de_ideias.py` | Interface gráfica (janela) — com fallback p/ terminal |
-| `transformador_cli.py` | Modo terminal |
-| `ia.py` | Motor de IA de verdade (GPT/OpenAI) com fallback offline |
-| `minhas_ideias.json.exemplo` | Modelo para você criar seus próprios geradores |
-| `instalar.bat` / `instalar.sh` | Instaladores que preparam tudo |
-| `pyproject.toml` | Empacotamento para `pip install .` |
+| `server.js` | Servidor autoritativo (Node + Socket.io): fases, economia, sorteio do assassino, mortes e poderes |
+| `public/index.html` | Telas (login, lobby/loja, desenho, votação, resultado) e HUD |
+| `public/css/style.css` | Estilo |
+| `public/js/main.js` | Cliente 3D (Three.js): cena, movimento, câmera, rede |
 
-Cada transformador é uma função simples que recebe a sua ideia (texto) e
-devolve o resultado. Tudo funciona **offline**, sem chave de API.
+### Notas técnicas / limitações conhecidas
 
----
+- O movimento é reportado pelo cliente (sem anti-cheat). As **mortes** e os
+  **poderes** são validados no servidor (distância/cooldown/usos).
+- "Controlar o assassino" (The Pro) está implementado como **imobilizar** o
+  assassino por 10s — controle direto exigiria mais sincronização.
+- É **uma sala global** (todos no mesmo jogo). Dá pra evoluir pra várias salas.
 
-## 💡 Exemplo
-
-Ideia: *"um app que ajuda crianças a aprender reciclagem de forma divertida"*
-
-- Escolhendo **Redação** → vira um texto dissertativo com introdução,
-  desenvolvimento e conclusão.
-- Escolhendo **Jogo da Forca** → vira um arquivo `.html` jogável no navegador.
-- Escolhendo **Letra de Música** → vira uma letra com versos e refrão.
-
-Divirta-se transformando ideias! 🎉
+Bom jogo! 🎉
