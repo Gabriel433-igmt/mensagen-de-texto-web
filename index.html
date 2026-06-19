@@ -5,28 +5,24 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
 <title>Fuga 3D</title>
 <link rel="stylesheet" href="css/style.css" />
-<script src="/socket.io/socket.io.js"></script>
-<script type="importmap">
-{ "imports": { "three": "https://unpkg.com/three@0.160.0/build/three.module.js" } }
-</script>
 </head>
 <body>
 <div id="game-root"></div>
 
 <!-- HUD topo -->
-<div id="hud">
+<div id="hud" class="hidden">
   <div id="hud-money">R$ <span id="money">100</span></div>
-  <div id="hud-phase">LOBBY</div>
+  <div id="hud-phase">FUGA</div>
   <div id="hud-timer"></div>
 </div>
 
-<!-- Tela de login -->
+<!-- Login -->
 <section id="screen-login" class="screen show">
   <div class="card">
     <h1>🔪 Fuga 3D</h1>
-    <p class="sub">Desenhe, sobreviva e fuja do assassino. Online, mín. 3 jogadores.</p>
+    <p class="sub">Sobreviva, fuja do assassino e use seus poderes. Só baixar e jogar.</p>
     <input id="name-input" maxlength="16" placeholder="Seu nome" />
-    <button id="btn-enter" class="primary">Entrar</button>
+    <button id="btn-enter" class="primary">Jogar</button>
     <p class="hint">Você começa com R$100. Cada poder custa mais (até R$1000).</p>
   </div>
 </section>
@@ -35,42 +31,33 @@
 <section id="screen-lobby" class="screen">
   <div class="card wide">
     <h2>Lobby</h2>
-    <div id="players-list" class="players"></div>
-    <h3>Loja de personagens</h3>
+    <div class="row">
+      <label class="botcount">Bots na partida:
+        <select id="bot-count">
+          <option value="2">2</option>
+          <option value="3" selected>3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+          <option value="7">7</option>
+        </select>
+      </label>
+      <label class="botcount"><input type="checkbox" id="force-assassin" /> Jogar como assassino</label>
+    </div>
+    <h3>Personagens sobreviventes</h3>
     <div id="shop" class="shop"></div>
     <div id="choose-power" class="choose hidden">
-      <span>Power Best — escolha o poder:</span>
+      <span>Power Best — poder:</span>
       <select id="chosen-power">
         <option value="invisible">Invisível</option>
         <option value="stun">Atordoar</option>
         <option value="control">Congelar assassino</option>
       </select>
     </div>
+    <h3>Assassino da partida (sorteado se vazio)</h3>
+    <div id="assassin-shop" class="shop"></div>
     <div class="row">
-      <button id="btn-ready" class="primary">Ficar pronto ✅</button>
-      <span id="ready-info" class="hint"></span>
+      <button id="btn-start" class="primary">Iniciar partida ▶️</button>
     </div>
-  </div>
-</section>
-
-<!-- Desenho -->
-<section id="screen-draw" class="screen">
-  <div class="card">
-    <h2>✏️ Desenhe algo!</h2>
-    <p class="sub">O desenho mais feio vira o alvo do assassino.</p>
-    <canvas id="draw-canvas" width="360" height="260"></canvas>
-    <div class="row">
-      <button id="btn-clear">Limpar</button>
-      <button id="btn-send-draw" class="primary">Enviar</button>
-    </div>
-  </div>
-</section>
-
-<!-- Votacao -->
-<section id="screen-vote" class="screen">
-  <div class="card wide">
-    <h2>🗳️ Vote no mais feio</h2>
-    <div id="vote-grid" class="vote-grid"></div>
   </div>
 </section>
 
@@ -79,19 +66,23 @@
   <div class="card">
     <h2 id="result-title">Fim da partida</h2>
     <div id="result-summary"></div>
+    <button id="btn-back" class="primary">Voltar ao lobby</button>
   </div>
 </section>
 
-<!-- HUD do jogo (durante a fuga) -->
+<!-- HUD do jogo -->
 <div id="game-hud" class="hidden">
   <div id="role-banner"></div>
+  <div id="hpbar-wrap"><div id="hpbar"></div><span id="hptext"></span></div>
   <div id="power-bar"></div>
+  <div id="alive-count"></div>
   <div id="kill-feed"></div>
+  <div id="crosshair">+</div>
 </div>
 
-<!-- Mensagens de sistema -->
 <div id="toasts"></div>
 
-<script type="module" src="js/main.js"></script>
+<script src="js/three.min.js"></script>
+<script src="js/game.js"></script>
 </body>
 </html>

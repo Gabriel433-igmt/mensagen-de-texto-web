@@ -97,3 +97,18 @@ button.primary{background:linear-gradient(120deg,var(--accent),var(--accent2));c
 #toasts{position:fixed;bottom:16px;left:16px;z-index:40;display:flex;flex-direction:column;gap:6px;max-width:60vw;}
 #toasts .t{background:#000c;border-left:3px solid var(--accent);padding:8px 12px;border-radius:6px;font-size:13px;animation:fade .3s;}
 @keyframes fade{from{opacity:0;transform:translateY(6px);}to{opacity:1;}}
+
+/* Vida, mira e contadores do jogo */
+#hpbar-wrap{position:absolute;bottom:64px;left:50%;transform:translateX(-50%);
+  width:280px;height:20px;background:#0008;border-radius:10px;overflow:hidden;border:1px solid #0006;}
+#hpbar{height:100%;width:100%;background:#4affa3;transition:width .15s,background .15s;}
+#hptext{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  font-size:12px;font-weight:700;text-shadow:0 1px 2px #000;}
+#alive-count{position:absolute;top:100px;left:16px;background:#000a;padding:6px 12px;border-radius:8px;font-size:13px;}
+#crosshair{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  font-size:24px;color:#fff9;pointer-events:none;text-shadow:0 0 3px #000;}
+
+/* Lobby: selects e checkbox */
+.botcount{display:flex;align-items:center;gap:6px;color:var(--muted);font-size:14px;}
+.botcount select{width:auto;margin:0;padding:6px 8px;}
+.botcount input{width:auto;margin:0;}

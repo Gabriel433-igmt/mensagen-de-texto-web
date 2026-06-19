@@ -1,91 +1,93 @@
 # 🔪 Fuga 3D
 
-Jogo **3D online (multiplayer)** no navegador, no estilo *Forsaken*: cada
-rodada tem uma fase de **desenho**, uma **votação do desenho mais feio** e
-uma **fuga de 3 minutos** onde os sobreviventes correm de um **assassino**.
-
-> ⚠️ **Estado:** é uma **base jogável e funcional** (protótipo), não um jogo
-> AAA finalizado. Tem o ciclo completo de partida, economia e poderes
-> funcionando. Dá pra evoluir gráficos, mapas, anti-cheat e poderes a partir
-> daqui.
+Jogo **3D** de fuga (estilo *Forsaken*) que roda **só abrindo um arquivo** no
+navegador. **Não precisa instalar nada, não precisa de servidor.** É offline,
+com **bots**: você sobrevive (ou é o assassino) numa arena 3D, usa poderes,
+pega kits médicos e se esconde.
 
 ---
 
-## ▶️ Como rodar
+## ▶️ Como jogar (baixar e rodar)
 
-Precisa do **Node.js 18+**.
+1. Baixe a pasta do projeto (no GitHub: botão verde **`< > Code` → Download
+   ZIP**) e **extraia**.
+2. Dê **dois cliques no `index.html`** (ou arraste para o navegador).
+3. Pronto! Coloque seu nome e jogue.
 
-```bash
-npm install
-npm start
-```
-
-Abra **http://localhost:3000** no navegador. Para jogar de verdade (mín. 3
-jogadores), abra **3 ou mais abas/aparelhos** apontando para o mesmo endereço.
-
-Para outras pessoas entrarem pela internet, hospede o `server.js` (Render,
-Railway, uma VPS, etc.) e compartilhe o link.
+> Funciona offline porque o Three.js já vem junto em `js/three.min.js`.
+> Recomendado: Chrome, Edge ou Firefox atualizados.
 
 ---
 
-## 🎮 Como joga
+## 🎮 Controles
 
-1. **Entre** com um nome. Você começa com **R$100** (máx. **R$1000**).
-2. No **lobby**, compre um personagem na loja e clique em **Ficar pronto**.
-   Quando houver **3+ prontos**, a partida começa.
-3. **Desenho:** desenhe algo (45s).
-4. **Votação:** vote no **desenho mais feio**. O mais votado vira o **alvo
-   destacado** (brilha) e precisa fugir.
-5. **Fuga (3 min):** um **assassino** (sorteado) caça todos. Sobreviventes
-   usam seus poderes pra escapar.
-   - Mover: **WASD / setas** · Olhar: **mouse** (clique pra travar o mouse)
-   - Sobrevivente: **Espaço** usa o poder · Assassino: **Espaço / clique** ataca
-6. **Vitória:** se o assassino pega todos → assassino vence. Se sobrar alguém
-   no tempo → sobreviventes vencem.
+| Tecla | Ação |
+|------|------|
+| **W A S D / setas** | Andar |
+| **Mouse** | Olhar (clique na tela para travar o mouse) |
+| **Espaço / clique** | Sobrevivente: usar poder · Assassino: dar soco |
+| **Q** | Marcar ponto (teleporte) · Assassino: poder especial |
 
-### 💰 Economia
+Kits médicos (➕) ficam pelo mapa — passe por cima para curar. As **moitas
+verdes** servem de esconderijo: dentro delas o assassino tem dificuldade de te
+ver.
+
+---
+
+## 💰 Economia (salva no seu navegador)
+
+Você começa com **R$100** (máximo **R$1000**). O dinheiro fica salvo no
+navegador (`localStorage`).
 
 | Ação | Recompensa |
 |------|-----------|
-| Participar | **+R$15** |
+| Participar de uma partida | **+R$15** |
 | Sobreviver e vencer | **+R$20** |
 | Vencer como assassino | **+R$40** |
 | Cada morte feita pelo assassino | **+R$1** |
 
-O dinheiro é **salvo por nome** (arquivo `data/wallets.json`).
+O assassino é **sorteado** com peso pelo seu dinheiro: quanto mais você tem,
+maior a chance de ser o assassino (ou marque "Jogar como assassino" no lobby).
 
-### 🦸 Personagens / poderes (loja)
+---
+
+## 🦸 Personagens sobreviventes (loja)
 
 | Personagem | Preço | Poder |
 |-----------|------|-------|
 | Clássico | Grátis | Sem poder |
-| Lua | R$100 | Corre mais rápido, mas congela 1s a cada 10s |
-| The Artist | R$250 | Marca um ponto e volta pra ele (5x) |
-| The Bester | R$450 | Fica invisível por 5s (3x) |
+| Lua | R$100 | Corre rápido, mas congela 1s a cada 10s |
+| The Artist | R$250 | Marca um ponto (Q) e volta pra ele (5x) |
+| The Bester | R$450 | Fica invisível 5s (3x) |
 | The Adm | R$650 | Atordoa o assassino que estiver perto (3x) |
-| The Pro | R$850 | Congela ("controla") o assassino por 10s (1x) |
-| The Power Best | R$1000 | Escolhe um dos 3 poderes acima |
+| The Pro | R$850 | Congela o assassino por 10s (1x) |
+| The Power Best | R$900 | Escolhe um dos 3 poderes acima |
+| **The Hacker** | R$1000 | Usa **todos** os poderes 1x cada e **enxerga invisíveis** |
 
-O **assassino é sorteado** com peso pelo dinheiro acumulado: quem ganhou mais
-tem mais chance de ser o assassino.
+## 🔪 Assassinos (cada um com um poder)
+
+| Assassino | Especial |
+|-----------|----------|
+| Free | Soco básico |
+| **Lucas** | Cada soco ganha dinheiro e velocidade |
+| **Ilusionista** | Q cria clones que confundem os bots |
+| **Marcador** | Marca alguém; se tirou +50% da vida em 10s, **mata na hora** |
 
 ---
 
-## 🛠️ Arquitetura
+## 🛠️ Arquivos
 
 | Arquivo | O que faz |
 |---------|-----------|
-| `server.js` | Servidor autoritativo (Node + Socket.io): fases, economia, sorteio do assassino, mortes e poderes |
-| `public/index.html` | Telas (login, lobby/loja, desenho, votação, resultado) e HUD |
-| `public/css/style.css` | Estilo |
-| `public/js/main.js` | Cliente 3D (Three.js): cena, movimento, câmera, rede |
+| `index.html` | Página do jogo (telas e HUD) |
+| `js/game.js` | Todo o jogo: 3D, bots, vida, poderes, economia |
+| `js/three.min.js` | Motor 3D (Three.js) embutido para rodar offline |
+| `css/style.css` | Estilo |
 
-### Notas técnicas / limitações conhecidas
-
-- O movimento é reportado pelo cliente (sem anti-cheat). As **mortes** e os
-  **poderes** são validados no servidor (distância/cooldown/usos).
-- "Controlar o assassino" (The Pro) está implementado como **imobilizar** o
-  assassino por 10s — controle direto exigiria mais sincronização.
-- É **uma sala global** (todos no mesmo jogo). Dá pra evoluir pra várias salas.
+### O que ainda dá pra melhorar
+- É **um jogador + bots** (offline). Multiplayer online de verdade precisaria
+  de um servidor — dá pra adicionar depois.
+- "Controlar o assassino" (The Pro) está como **congelar** por 10s.
+- Os bots são simples (fogem/perseguem). Dá pra deixar a IA mais esperta.
 
 Bom jogo! 🎉
