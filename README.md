@@ -1,21 +1,32 @@
-# 🔪 Fuga 3D
+# 🔪 Fuga 3D — Online (P2P)
 
-Jogo **3D** de fuga (estilo *Forsaken*) que roda **só abrindo um arquivo** no
-navegador. **Não precisa instalar nada, não precisa de servidor.** É offline,
-com **bots**: você sobrevive (ou é o assassino) numa arena 3D, usa poderes,
-pega kits médicos e se esconde.
+Jogo **3D online** estilo *Forsaken* que roda **só abrindo um arquivo** no
+navegador. O multiplayer é **P2P (WebRTC)**: um jogador **cria a sala** e vira
+o host, os outros **entram com um código**. **Não precisa instalar nada e não
+precisa de servidor próprio** — a conexão usa o broker gratuito do PeerJS só
+para os jogadores se acharem; o jogo em si vai direto entre os navegadores.
+
+> ⚠️ É uma **base jogável** (protótipo), não um jogo AAA finalizado. O ciclo
+> completo (sala, partida, vida, poderes, economia) funciona.
 
 ---
 
 ## ▶️ Como jogar (baixar e rodar)
 
-1. Baixe a pasta do projeto (no GitHub: botão verde **`< > Code` → Download
-   ZIP**) e **extraia**.
+1. Baixe a pasta no GitHub: **`< > Code` → Download ZIP** e **extraia**.
 2. Dê **dois cliques no `index.html`** (ou arraste para o navegador).
-3. Pronto! Coloque seu nome e jogue.
+3. Coloque seu nome.
 
-> Funciona offline porque o Three.js já vem junto em `js/three.min.js`.
-> Recomendado: Chrome, Edge ou Firefox atualizados.
+**Para criar uma sala:** clique em **Criar sala** → aparece um **código** →
+mande para os amigos.
+**Para entrar:** clique em **Entrar na sala**, cole o código e conecte.
+
+Quando todo mundo estiver na sala, o **host** clica em **Iniciar partida**.
+Mínimo de **3 jogadores** — se faltar gente, **bots** completam.
+
+> Precisa de **internet** (mesmo abrindo o arquivo local), porque é online.
+> Em algumas redes muito restritas (firewall corporativo/escola) a conexão
+> WebRTC pode falhar — nesse caso, tente outra rede.
 
 ---
 
@@ -25,53 +36,48 @@ pega kits médicos e se esconde.
 |------|------|
 | **W A S D / setas** | Andar |
 | **Mouse** | Olhar (clique na tela para travar o mouse) |
-| **Espaço / clique** | Sobrevivente: usar poder · Assassino: dar soco |
+| **Espaço / clique** | Sobrevivente: poder · Assassino: soco |
 | **Q** | Marcar ponto (teleporte) · Assassino: poder especial |
 
-Kits médicos (➕) ficam pelo mapa — passe por cima para curar. As **moitas
-verdes** servem de esconderijo: dentro delas o assassino tem dificuldade de te
-ver.
+Kits médicos (➕) curam ao passar por cima. **Moitas verdes** = esconderijo
+(o assassino tem dificuldade de te ver dentro delas).
 
 ---
 
-## 💰 Economia (salva no seu navegador)
+## 💰 Economia (salva no navegador)
 
-Você começa com **R$100** (máximo **R$1000**). O dinheiro fica salvo no
-navegador (`localStorage`).
+Começa com **R$100** (máx. **R$1000**).
 
 | Ação | Recompensa |
 |------|-----------|
-| Participar de uma partida | **+R$15** |
+| Participar | **+R$15** |
 | Sobreviver e vencer | **+R$20** |
 | Vencer como assassino | **+R$40** |
-| Cada morte feita pelo assassino | **+R$1** |
+| Cada morte do assassino | **+R$1** |
 
-O assassino é **sorteado** com peso pelo seu dinheiro: quanto mais você tem,
-maior a chance de ser o assassino (ou marque "Jogar como assassino" no lobby).
+O assassino é **sorteado** com peso pelo dinheiro de cada um.
 
----
-
-## 🦸 Personagens sobreviventes (loja)
+## 🦸 Personagens (sobreviventes)
 
 | Personagem | Preço | Poder |
 |-----------|------|-------|
 | Clássico | Grátis | Sem poder |
-| Lua | R$100 | Corre rápido, mas congela 1s a cada 10s |
-| The Artist | R$250 | Marca um ponto (Q) e volta pra ele (5x) |
-| The Bester | R$450 | Fica invisível 5s (3x) |
-| The Adm | R$650 | Atordoa o assassino que estiver perto (3x) |
-| The Pro | R$850 | Congela o assassino por 10s (1x) |
-| The Power Best | R$900 | Escolhe um dos 3 poderes acima |
-| **The Hacker** | R$1000 | Usa **todos** os poderes 1x cada e **enxerga invisíveis** |
+| Lua | R$100 | Veloz, mas congela 1s a cada 10s |
+| The Artist | R$250 | Marca ponto (Q) e volta (5x) |
+| The Bester | R$450 | Invisível 5s (3x) |
+| The Adm | R$650 | Atordoa o assassino perto (3x) |
+| The Pro | R$850 | Congela o assassino 10s (1x) |
+| The Power Best | R$900 | Escolhe um dos 3 poderes |
+| The Hacker | R$1000 | Usa todos os poderes 1x e enxerga invisíveis |
 
-## 🔪 Assassinos (cada um com um poder)
+## 🔪 Assassinos
 
 | Assassino | Especial |
 |-----------|----------|
 | Free | Soco básico |
-| **Lucas** | Cada soco ganha dinheiro e velocidade |
-| **Ilusionista** | Q cria clones que confundem os bots |
-| **Marcador** | Marca alguém; se tirou +50% da vida em 10s, **mata na hora** |
+| Lucas | Cada soco ganha dinheiro e velocidade |
+| Ilusionista | Q cria clones que confundem os bots |
+| Marcador | Marca alguém; se tirou +50% da vida em 10s, mata na hora |
 
 ---
 
@@ -79,15 +85,19 @@ maior a chance de ser o assassino (ou marque "Jogar como assassino" no lobby).
 
 | Arquivo | O que faz |
 |---------|-----------|
-| `index.html` | Página do jogo (telas e HUD) |
-| `js/game.js` | Todo o jogo: 3D, bots, vida, poderes, economia |
-| `js/three.min.js` | Motor 3D (Three.js) embutido para rodar offline |
+| `index.html` | Telas (login, criar/entrar sala, lobby, resultado) e HUD |
+| `js/game.js` | Jogo + rede P2P (host autoritativo) |
+| `js/three.min.js` | Motor 3D (embutido, offline) |
+| `js/peerjs.min.js` | WebRTC/sinalização (embutido) |
 | `css/style.css` | Estilo |
 
-### O que ainda dá pra melhorar
-- É **um jogador + bots** (offline). Multiplayer online de verdade precisaria
-  de um servidor — dá pra adicionar depois.
-- "Controlar o assassino" (The Pro) está como **congelar** por 10s.
-- Os bots são simples (fogem/perseguem). Dá pra deixar a IA mais esperta.
+### Como o online funciona (resumo técnico)
+- Quem **cria a sala** roda a simulação (host autoritativo) e envia o estado
+  ~15x/s para os outros; os outros mandam só os comandos (mover/agir).
+- Conexão direta entre navegadores via **WebRTC**; o broker do PeerJS é usado
+  apenas para trocar o "endereço" inicial.
+- Limitações: sem anti-cheat (o host confia nos comandos), sem previsão de
+  movimento no cliente (pode ter um pequeno atraso conforme a latência), e
+  "controlar o assassino" (The Pro) está como **congelar 10s**.
 
 Bom jogo! 🎉

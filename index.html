@@ -3,13 +3,12 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-<title>Fuga 3D</title>
+<title>Fuga 3D — Online</title>
 <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
 <div id="game-root"></div>
 
-<!-- HUD topo -->
 <div id="hud" class="hidden">
   <div id="hud-money">R$ <span id="money">100</span></div>
   <div id="hud-phase">FUGA</div>
@@ -20,30 +19,41 @@
 <section id="screen-login" class="screen show">
   <div class="card">
     <h1>🔪 Fuga 3D</h1>
-    <p class="sub">Sobreviva, fuja do assassino e use seus poderes. Só baixar e jogar.</p>
+    <p class="sub">Multiplayer online por código de sala. Só baixar e jogar.</p>
     <input id="name-input" maxlength="16" placeholder="Seu nome" />
-    <button id="btn-enter" class="primary">Jogar</button>
-    <p class="hint">Você começa com R$100. Cada poder custa mais (até R$1000).</p>
+    <button id="btn-enter" class="primary">Continuar</button>
+    <p class="hint">Você começa com R$100 (máx. R$1000), salvo no seu navegador.</p>
   </div>
 </section>
 
-<!-- Lobby + loja -->
+<!-- Menu: criar ou entrar -->
+<section id="screen-menu" class="screen">
+  <div class="card">
+    <h2>Jogar online</h2>
+    <button id="btn-create" class="primary" style="width:100%">➕ Criar sala (ser o host)</button>
+    <p class="hint">Você cria a sala e passa o código para os amigos.</p>
+    <hr style="border-color:#2a2f55;margin:18px 0" />
+    <input id="join-code" placeholder="Cole o código da sala aqui" />
+    <button id="btn-join" class="primary" style="width:100%">🔗 Entrar na sala</button>
+    <p class="hint">Precisa de internet. Mín. 3 jogadores — bots completam.</p>
+  </div>
+</section>
+
+<!-- Lobby -->
 <section id="screen-lobby" class="screen">
   <div class="card wide">
-    <h2>Lobby</h2>
-    <div class="row">
-      <label class="botcount">Bots na partida:
-        <select id="bot-count">
-          <option value="2">2</option>
-          <option value="3" selected>3</option>
-          <option value="4">4</option>
-          <option value="5">5</option>
-          <option value="7">7</option>
-        </select>
-      </label>
-      <label class="botcount"><input type="checkbox" id="force-assassin" /> Jogar como assassino</label>
+    <h2 id="lobby-title">Sala</h2>
+
+    <div id="room-code-wrap" class="hidden codebox">
+      <span>Código da sala:</span>
+      <code id="room-code">...</code>
+      <button id="btn-copy">📋 Copiar</button>
     </div>
-    <h3>Personagens sobreviventes</h3>
+
+    <div id="players-list" class="players"></div>
+    <p id="lobby-info" class="hint"></p>
+
+    <h3>Seu personagem</h3>
     <div id="shop" class="shop"></div>
     <div id="choose-power" class="choose hidden">
       <span>Power Best — poder:</span>
@@ -53,10 +63,18 @@
         <option value="control">Congelar assassino</option>
       </select>
     </div>
-    <h3>Assassino da partida (sorteado se vazio)</h3>
-    <div id="assassin-shop" class="shop"></div>
-    <div class="row">
-      <button id="btn-start" class="primary">Iniciar partida ▶️</button>
+
+    <div id="host-controls" class="hidden">
+      <div class="row">
+        <label class="botcount">Bots: <select id="bot-count">
+          <option value="0">0</option><option value="1">1</option>
+          <option value="2" selected>2</option><option value="3">3</option><option value="5">5</option>
+        </select></label>
+        <button id="btn-start" class="primary">Iniciar partida ▶️</button>
+      </div>
+    </div>
+    <div id="join-controls" class="hidden">
+      <p class="hint">Escolha seu personagem e espere o host iniciar.</p>
     </div>
   </div>
 </section>
@@ -66,7 +84,7 @@
   <div class="card">
     <h2 id="result-title">Fim da partida</h2>
     <div id="result-summary"></div>
-    <button id="btn-back" class="primary">Voltar ao lobby</button>
+    <button id="btn-back" class="primary">Voltar ao início</button>
   </div>
 </section>
 
@@ -83,6 +101,7 @@
 <div id="toasts"></div>
 
 <script src="js/three.min.js"></script>
+<script src="js/peerjs.min.js"></script>
 <script src="js/game.js"></script>
 </body>
 </html>
