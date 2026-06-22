@@ -1,22 +1,10 @@
-# Arquivos gerados automaticamente pelo Python
-__pycache__/
-*.pyc
-*.pyo
+# Dependencias do Node
+node_modules/
 
-# Empacotamento
-build/
-dist/
-*.egg-info/
+# Dados gerados em runtime (carteiras dos jogadores)
+data/
 
-# Launchers/atalhos gerados pelos instaladores
-executar.sh
-"Transformador de Ideias.bat"
-
-# Ideias personalizadas do usuario (cada um cria a sua a partir do .exemplo)
-minhas_ideias.json
-
-# CHAVE DE API — NUNCA deve ir para o GitHub! (e nenhuma variante)
-chave_openai.txt
-chave*.txt
-*.key
+# Logs e ambiente
+*.log
 .env
+npm-debug.log*
