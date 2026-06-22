@@ -37,4 +37,9 @@ Protótipo jogável: host autoritativo (confia nos comandos, sem anti-cheat), o
 estado vai pelo Firebase (~10x/s) então pode ter um pequeno atraso conforme a
 internet, e "controlar o assassino" (The Pro) está como **congelar 10s**.
 
+## 📜 Licença
+**GNU AGPL v3** — Copyright © 2026 **Gabriel433-igmt**. Você pode pegar e usar o
+código, **mas** tem que **manter o código aberto** (mesmo rodando num site) e
+**dar crédito** ao autor. Veja o arquivo [`LICENSE`](LICENSE).
+
 Bom jogo! 🎉
