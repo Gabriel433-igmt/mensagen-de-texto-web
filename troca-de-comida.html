@@ -42,11 +42,28 @@
   .aviso{font-size:.78rem; color:var(--cinza); margin:6px 0 10px;}
   .erro{color:#c62828; font-size:.85rem; margin-bottom:8px; min-height:1em;}
   .oculto{display:none !important;}
-  /* Tela de login */
-  #telaLogin{max-width:400px; margin:40px auto; padding:0 16px;}
-  #telaLogin .logo{text-align:center; font-size:2.6rem; margin-bottom:6px;}
-  #telaLogin h2{text-align:center; margin-bottom:4px; color:var(--verde);}
-  #telaLogin p.sub{text-align:center; color:var(--cinza); font-size:.9rem; margin-bottom:20px;}
+  /* Página inicial pública + login */
+  #telaLogin{max-width:640px; margin:0 auto; padding:0 16px 40px;}
+  .hero{text-align:center; padding:36px 10px 22px;}
+  .hero .logo{font-size:3.2rem; margin-bottom:6px;}
+  .hero h2{color:var(--verde); font-size:1.7rem; margin-bottom:8px;}
+  .hero p.sub{color:var(--cinza); font-size:1rem; max-width:460px; margin:0 auto 18px;}
+  .hero .acao{max-width:300px; margin:6px auto 0; display:block;}
+  .secao{margin-top:26px;}
+  .secao h3{color:var(--verde); margin-bottom:12px; font-size:1.15rem;}
+  .como{display:grid; grid-template-columns:repeat(auto-fit,minmax(170px,1fr)); gap:12px;}
+  .como .item{background:var(--card); border-radius:var(--raio); box-shadow:var(--sombra); padding:16px; text-align:center;}
+  .como .item .ico{font-size:2rem; margin-bottom:8px;}
+  .como .item b{display:block; margin-bottom:6px; font-size:.95rem;}
+  .como .item p{font-size:.82rem; color:var(--cinza);}
+  .faq details{background:var(--card); border-radius:10px; box-shadow:var(--sombra); padding:12px 14px; margin-bottom:8px; font-size:.9rem;}
+  .faq summary{font-weight:700; cursor:pointer;}
+  .faq p{margin-top:8px; color:#555;}
+  footer{text-align:center; padding:26px 14px; font-size:.8rem; color:var(--cinza);}
+  footer a{color:var(--verde); font-weight:700; cursor:pointer; text-decoration:underline;}
+  .politica h4{color:var(--verde); margin:14px 0 6px; font-size:.95rem;}
+  .politica p, .politica li{font-size:.85rem; color:#444; margin-bottom:6px; line-height:1.5;}
+  .politica ul{padding-left:18px; margin-bottom:6px;}
   /* Modal */
   .modal-fundo{position:fixed; inset:0; background:rgba(0,0,0,.55); display:flex; align-items:center; justify-content:center; z-index:100; padding:14px;}
   .modal{background:#fff; border-radius:var(--raio); max-width:480px; width:100%; max-height:92vh; overflow-y:auto; padding:20px;}
@@ -69,24 +86,106 @@
 </head>
 <body>
 
-<!-- ===================== TELA DE LOGIN ===================== -->
+<!-- ===================== PÁGINA INICIAL PÚBLICA + LOGIN ===================== -->
 <div id="telaLogin">
-  <div class="logo">🍲</div>
-  <h2>TrocaPrato</h2>
-  <p class="sub">Cozinhou demais? Troque seu prato pelo prato de outra pessoa!</p>
-  <div class="card">
-    <div id="loginErro" class="erro"></div>
-    <div id="campoNome">
-      <label>Seu nome</label>
-      <input id="inNome" type="text" placeholder="Ex.: Maria da Silva">
-    </div>
-    <label>E-mail</label>
-    <input id="inEmail" type="email" placeholder="voce@email.com">
-    <label>Senha</label>
-    <input id="inSenha" type="password" placeholder="mínimo 6 caracteres">
-    <button class="acao" id="btnEntrar">Criar conta</button>
-    <button class="acao secundaria" id="btnAlternar">Já tenho conta — entrar</button>
+
+  <div class="hero">
+    <div class="logo">🍲</div>
+    <h2>TrocaPrato</h2>
+    <p class="sub">Cozinhou demais e não quer desperdiçar? Aqui você troca o prato que fez
+    pelo prato de outra pessoa do seu bairro. Comida caseira de verdade, sem dinheiro no meio —
+    só troca justa entre vizinhos.</p>
+    <button class="acao" onclick="document.getElementById('cardLogin').scrollIntoView({behavior:'smooth'})">
+      Começar a trocar 🍛
+    </button>
   </div>
+
+  <div class="secao">
+    <h3>Como funciona?</h3>
+    <div class="como">
+      <div class="item">
+        <div class="ico">📸</div>
+        <b>1. Poste seu prato</b>
+        <p>Fez lasanha, feijoada ou bolo demais? Tire uma foto, escreva a descrição e publique.</p>
+      </div>
+      <div class="item">
+        <div class="ico">🔄</div>
+        <b>2. Peça uma troca</b>
+        <p>Viu um prato que deu água na boca? Ofereça um dos seus pratos em troca. A pessoa aceita ou recusa.</p>
+      </div>
+      <div class="item">
+        <div class="ico">🤝</div>
+        <b>3. Busque e aproveite</b>
+        <p>Troca aceita? Combine o horário, vá até a pessoa e façam a troca. Bom apetite!</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="secao">
+    <h3>🛵 Entrega por motoboy verificado</h3>
+    <div class="card">
+      <p style="font-size:.9rem; color:#555; line-height:1.55">
+        Não pode ir buscar? As trocas também podem ser entregues por motoboy, com frete combinado de
+        <b>no máximo R$ 50,00</b>. Para segurança de todos, o motoboy passa por uma
+        <b>verificação em duas etapas</b>: grava um vídeo ao vivo analisado por inteligência artificial
+        para confirmar que é uma pessoa real, e — se for contratado — envia a foto da carteira de
+        trabalho, que é analisada e <b>apagada do banco de dados em seguida</b>. A foto fica guardada
+        apenas no aparelho do motoboy por 30 dias e nunca aparece na galeria.
+      </p>
+    </div>
+  </div>
+
+  <div class="secao faq">
+    <h3>Perguntas frequentes</h3>
+    <details>
+      <summary>Preciso pagar alguma coisa?</summary>
+      <p>Não! A troca de pratos é sempre gratuita — um prato pelo outro. O único valor que pode
+      existir é o frete do motoboy, se vocês escolherem entrega, limitado a R$ 50,00 e combinado
+      entre as duas pessoas.</p>
+    </details>
+    <details>
+      <summary>Preciso ter um prato publicado para trocar?</summary>
+      <p>Sim. A ideia do site é a troca: para pedir o prato de alguém, você oferece um prato seu.
+      Assim ninguém sai perdendo e todo mundo come bem.</p>
+    </details>
+    <details>
+      <summary>Como sei que o motoboy é confiável?</summary>
+      <p>Todo motoboy passa por verificação ao vivo em vídeo, analisada automaticamente, antes de
+      poder fazer entregas. Motoboys contratados também comprovam o registro com a foto da carteira
+      de trabalho, que é analisada e descartada do banco de dados na hora, por privacidade.</p>
+    </details>
+    <details>
+      <summary>Meus dados estão seguros?</summary>
+      <p>Levamos privacidade a sério: coletamos só o necessário (nome, e-mail e os pratos que você
+      publica), fotos de documento não ficam armazenadas em nossos servidores, e você pode ler tudo
+      na nossa <a onclick="document.getElementById('modalPolitica').classList.remove('oculto')"
+      style="color:var(--verde);font-weight:700;cursor:pointer;text-decoration:underline">Política
+      de Privacidade</a>.</p>
+    </details>
+  </div>
+
+  <div class="secao" id="cardLogin">
+    <h3>Entre ou crie sua conta</h3>
+    <div class="card">
+      <div id="loginErro" class="erro"></div>
+      <div id="campoNome">
+        <label>Seu nome</label>
+        <input id="inNome" type="text" placeholder="Ex.: Maria da Silva">
+      </div>
+      <label>E-mail</label>
+      <input id="inEmail" type="email" placeholder="voce@email.com">
+      <label>Senha</label>
+      <input id="inSenha" type="password" placeholder="mínimo 6 caracteres">
+      <button class="acao" id="btnEntrar">Criar conta</button>
+      <button class="acao secundaria" id="btnAlternar">Já tenho conta — entrar</button>
+    </div>
+  </div>
+
+  <footer>
+    🍲 TrocaPrato — troca de comida caseira entre vizinhos.<br>
+    <a onclick="document.getElementById('modalPolitica').classList.remove('oculto')">Política de Privacidade</a>
+    · Este site usa cookies e exibe anúncios do Google AdSense.
+  </footer>
 </div>
 
 <!-- ===================== APP ===================== -->
@@ -162,6 +261,11 @@
       </div>
     </section>
 
+    <footer>
+      <a onclick="document.getElementById('modalPolitica').classList.remove('oculto')">Política de Privacidade</a>
+      · Este site usa cookies e exibe anúncios do Google AdSense.
+    </footer>
+
   </main>
 </div>
 
@@ -210,6 +314,71 @@
     <div id="statusCtps" class="status-ia oculto"></div>
     <button class="acao laranja" id="btnFotoCtps">📸 Tirar foto</button>
     <button class="acao secundaria" id="btnFecharCtps">Fechar</button>
+  </div>
+</div>
+
+<!-- ===================== MODAL: POLÍTICA DE PRIVACIDADE ===================== -->
+<div id="modalPolitica" class="modal-fundo oculto">
+  <div class="modal politica">
+    <h3>🔒 Política de Privacidade — TrocaPrato</h3>
+    <p><i>Última atualização: 14 de julho de 2026</i></p>
+
+    <h4>1. Quem somos</h4>
+    <p>O TrocaPrato é um site comunitário de troca de comida caseira entre vizinhos. Esta política
+    explica quais dados coletamos, por que coletamos e como você pode exercer seus direitos,
+    conforme a Lei Geral de Proteção de Dados (LGPD — Lei nº 13.709/2018).</p>
+
+    <h4>2. Dados que coletamos</h4>
+    <ul>
+      <li><b>Conta:</b> nome, e-mail e senha (a senha é guardada de forma criptografada pelo
+      Firebase Authentication, do Google — nós nunca temos acesso a ela).</li>
+      <li><b>Publicações:</b> fotos e descrições dos pratos que você publica, e o bairro/cidade
+      que você informa para combinar a troca.</li>
+      <li><b>Trocas:</b> as solicitações de troca entre usuários e o valor de frete combinado.</li>
+      <li><b>Verificação de motoboy (vídeo):</b> o vídeo ao vivo é analisado automaticamente
+      <b>no seu próprio aparelho</b> e não é enviado nem armazenado em nossos servidores — apenas
+      o resultado (verificado: sim ou não) é gravado.</li>
+      <li><b>Carteira de trabalho (motoboys contratados):</b> a foto é analisada e o registro
+      temporário é <b>apagado do nosso banco de dados logo após a análise</b>. A imagem fica
+      guardada somente no armazenamento interno do app, no seu aparelho, por <b>30 dias</b>,
+      não aparece na galeria do celular e é apagada automaticamente ao fim do prazo.</li>
+    </ul>
+
+    <h4>3. Cookies e publicidade (Google AdSense)</h4>
+    <p>Este site exibe anúncios do <b>Google AdSense</b>. O Google e seus parceiros usam cookies
+    para veicular anúncios com base em suas visitas a este e a outros sites. Você pode desativar
+    a publicidade personalizada em
+    <a href="https://adssettings.google.com" target="_blank" rel="noopener">adssettings.google.com</a>
+    e saber mais sobre como o Google usa dados em
+    <a href="https://policies.google.com/technologies/partner-sites" target="_blank" rel="noopener">
+    policies.google.com/technologies/partner-sites</a>.</p>
+
+    <h4>4. Com quem compartilhamos</h4>
+    <p>Usamos os serviços do Google Firebase (autenticação e banco de dados) para funcionar, e do
+    Google AdSense para anúncios. Não vendemos seus dados para ninguém. As informações dos pratos
+    e do local de retirada só ficam visíveis para outros usuários porque isso é necessário para a
+    troca acontecer.</p>
+
+    <h4>5. Seus direitos (LGPD)</h4>
+    <ul>
+      <li>Saber quais dados temos sobre você;</li>
+      <li>Corrigir dados incompletos ou errados;</li>
+      <li>Excluir sua conta e seus dados;</li>
+      <li>Revogar consentimentos dados anteriormente.</li>
+    </ul>
+    <p>Para exercer qualquer direito, entre em contato pelo e-mail
+    <b>contato.trocaprato@gmail.com</b>.</p>
+
+    <h4>6. Segurança e retenção</h4>
+    <p>Os dados ficam armazenados no Google Firebase, com criptografia em trânsito. Pratos removidos
+    deixam de aparecer no site. Fotos de documento não são retidas em servidor, como descrito no
+    item 2. Se você excluir sua conta, seus dados de perfil são removidos.</p>
+
+    <h4>7. Menores de idade</h4>
+    <p>O TrocaPrato não é destinado a menores de 18 anos, especialmente para a função de motoboy,
+    que exige documentação de trabalho.</p>
+
+    <button class="acao" onclick="fecharModal('modalPolitica')">Entendi ✔</button>
   </div>
 </div>
 
